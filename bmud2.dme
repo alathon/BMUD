@@ -1,0 +1,66 @@
+// DM Environment file for mudtutorials.dme.
+// All manual changes should be made outside the BEGIN_ and END_ blocks.
+// New source code should be placed in .dm files: choose File/New --> Code File.
+
+// BEGIN_INTERNALS
+/*
+FILE: 
+*/
+// END_INTERNALS
+// BEGIN_FILE_DIR
+#define FILE_DIR .
+#define FILE_DIR "character_creation"
+#define FILE_DIR "core"
+#define FILE_DIR "core/obj_manip"
+#define FILE_DIR "core/parser"
+#define FILE_DIR "core/services"
+#define FILE_DIR "environment"
+#define FILE_DIR "help"
+#define FILE_DIR "objects"
+#define FILE_DIR "olc"
+// END_FILE_DIR
+
+// BEGIN_PREFERENCES
+// END_PREFERENCES
+
+
+
+// BEGIN_INCLUDE
+#include <abyssdragon\parser\Parser.dme>
+#include <alathon\services\services.dme>
+#include "character_creation\char_manager.dm"
+#include "character_creation\char_template.dm"
+#include "core\_constants.dm"
+#include "core\bits.dm"
+#include "core\booting.dm"
+#include "core\movement.dm"
+#include "core\text_manipulation.dm"
+#include "core\parser\chat.dm"
+#include "core\parser\general.dm"
+#include "core\parser\movement.dm"
+#include "core\parser\object_manipulation.dm"
+#include "core\parser\parser.dm"
+#include "core\parser\input.dm"
+#include "core\parser\inputsettings.dm"
+#include "core\services\color.dm"
+#include "core\services\connection.dm"
+#include "core\services\io.dm"
+#include "core\services\logging.dm"
+#include "core\services\service_controller.dm"
+#include "environment\room_cluster.dm"
+#include "environment\room_manager.dm"
+#include "help\help.dm"
+#include "help\help_manager.dm"
+#include "objects\datum.dm"
+#include "menu.dm"
+#include "form.dm"
+#include "objects\mob.dm"
+#include "objects\obj.dm"
+#include "objects\atom.dm"
+#include "objects\client.dm"
+#include "objects\room.dm"
+#include "trace.dm"
+#include "olc\olc.dm"
+// END_INCLUDE
+
+#define TELNET_MODE // telnet mode defined, by default

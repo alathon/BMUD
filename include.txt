@@ -1,0 +1,3 @@
+Alathon.Services version=2
+AbyssDragon.Parser version=4
+Dantom.DB version=2
