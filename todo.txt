@@ -1,0 +1,14 @@
+- Revamp menu.dm entirely to use the new Input objects, etc.
+- Input should be able to toggle whether 'back' and 'exit' work.
+	- Need Input._enable_back
+	- Need Input._enable_exit
+- Input should allow a callback function to format the question.
+	- Need Input._format_callback
+	- Need Input._format_callback_obj
+- Implement Input._autocomplete
+- Implement Input._timeout
+- 
+- Clean up code in input.dm, parser.dm, form.dm
+- Add character saving/loading
+- Add room/zone saving/loading
+- OLC system?

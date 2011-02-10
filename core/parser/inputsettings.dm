@@ -2,7 +2,7 @@ InputSettings
 	var
 		_allow_mult=FALSE
 		_question
-		_answer_type=ANSWER_TYPE_ANY
+		_answer_type
 		_loop_time=2
 		_delete_on_err=FALSE
 		_case_sensitive=FALSE
@@ -14,6 +14,10 @@ InputSettings
 		_callback_obj
 		list/_answers
 		_default_answer
+
+	New()
+		_answer_type = inputOps.ANSWER_TYPE_ANY
+		..()
 
 	proc
 		setAllowMult(n)

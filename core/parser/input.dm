@@ -1,3 +1,4 @@
+/*
 var/const
 	ANSWER_TYPE_TEXT = 1
 	ANSWER_TYPE_NUM = 2
@@ -6,8 +7,20 @@ var/const
 
 	ERROR_INPUT = "123%&*@&*@#*(!_)!_)#&*!@@()#%"
 	ERROR_MISMATCH = "89234AJKSD!()*@"
+*/
 
-var/list/exclude_vars = list("type", "parent_type", "vars")
+var/inputOptions/inputOps = new()
+
+inputOptions
+	var
+		ANSWER_TYPE_TEXT = 1
+		ANSWER_TYPE_NUM = 2
+		ANSWER_TYPE_ANY = 3
+		ANSWER_TYPE_LIST = 4
+
+		ERROR_INPUT = "(@)*#()KOASJDLKAJ"
+		ERROR_MISMATCH = "!()@*KALSJDDJKL"
+		list/exclude_vars = list("type", "parent_type", "vars")
 
 Input
 	var
@@ -31,9 +44,6 @@ Input
 		_default_answer
 
 	proc
-		initAgain()
-			return _blockForInput()
-
 		_blockForInput()
 			var/prev_input
 			while(1)
@@ -41,7 +51,7 @@ Input
 				while(!_inputSet) sleep(_loop_time)
 				if(_confirm)
 					if(_confirm_now && prev_input != _input)
-						_parse_err = ERROR_MISMATCH
+						_parse_err = inputOps.ERROR_MISMATCH
 					else
 						if(!_confirm_now)
 							_confirm_now = TRUE
@@ -65,21 +75,26 @@ Input
 				if(_callback)
 					. = call(_callback_obj, _callback)(_target, n)
 
-				if(!.) break
+				if(!.)
+//					_parse_err = inputOps.ERROR_INPUT
+					break
 
-				if(_answer_type == ANSWER_TYPE_LIST)
+				if(_answer_type == inputOps.ANSWER_TYPE_LIST)
 					if(!_case_sensitive)
 						n = lowertext(n)
 
 					// Todo: Add support for the autocomplete option
 					if(!(n in _answers + list("back","exit")))
 						SendTxt("Invalid answer.", _target, DT_MISC, 0)
+//						_parse_err = inputOps.ERROR_INPUT
 						break
 
-				else if(_answer_type == ANSWER_TYPE_NUM)
+				else if(_answer_type == inputOps.ANSWER_TYPE_NUM)
 					if(n != "back" && n != "exit")
 						n = text2num(n)
-						if(!n) break
+						if(!n)
+//							_parse_err = inputOps.ERROR_INPUT
+							break
 
 				_inputSet = TRUE
 				return n
@@ -107,9 +122,9 @@ Input
 			if(_inputSet)
 				_input = p
 
-	New(client/D,question, answer_type=ANSWER_TYPE_ANY, 
+	New(client/D,question, answer_type=inputOps.ANSWER_TYPE_ANY,
 		list/answers, loop_time=2,
-		allow_mult=FALSE, case_sensitive=FALSE, 
+		allow_mult=FALSE, case_sensitive=FALSE,
 		delete_on_err=FALSE, timeout=0,
 		confirm=FALSE, password=FALSE)
 
@@ -120,7 +135,7 @@ Input
 		if(istype(question, /InputSettings))
 			var/InputSettings/I = question
 			for(var/V in I.vars)
-				if(!(V in exclude_vars)) src.vars[V] = I.vars[V]
+				if(!(V in inputOps.exclude_vars)) src.vars[V] = I.vars[V]
 		else
 			src._question = question
 			src._answer_type = answer_type

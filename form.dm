@@ -1,7 +1,7 @@
 
 /*
 
-A form is a sequence of questions. Upon 'submission', the form
+A form is a sequence of _questions. Upon 'submission', the form
 will signal that it is ready to be read. It can also signal that
 the user has exited the form, in a variety of different ways (Chose to exit, disconnected).
 
@@ -18,10 +18,10 @@ spawn()
 		return // Bad form.
 
 The form works by allowing the user to opt to go back to the previous step at any time by typing 'back', or
-exit the form completely by typing 'exit'. As such, 'back' and 'exit' are not legal answers to any questions
+exit the form completely by typing 'exit'. As such, 'back' and 'exit' are not legal _answers to any _questions
 asked by a form.
 
-Questions are asked in the order they are added, and can be fetched by form.getAnswer(id), where id is the id of
+_questions are asked in the order they are added, and can be fetched by form.getAnswer(id), where id is the id of
 the question. If no id is provided, an incremental numerical ID is assigned. Mixing the two is a bad idea, and why
 would you want to be doing that?
 */
@@ -51,7 +51,7 @@ question
 
 	proc
 		ask(client/C)
-			answer = ERROR_INPUT
+			answer = inputOps.ERROR_INPUT
 			_input = new(C, settings)
 			answer = _input.getInput()
 			if(answer == "back") answer = ANSWER_BACK
@@ -63,56 +63,59 @@ question
 
 form
 	var
-		done_asking = FALSE
-		id_count=0
-		list/questions // Questions are indexed by the question 'id'.
-		list/answers
-		exit_reason
+		_done_asking = FALSE
+		_idc=0
+		list/_questions // _questions are indexed by the question 'id'.
+		list/_answers
+		_exit_reason
 
 	proc
 		addQuestion(id, InputSettings/I)
 			if(!istype(I, /InputSettings))
 				CRASH("Non-InputSettings object passed to form.addQuestion() for id:[id]") // Todo: replace with Log
 
-			if(!id) id = ++id_count
+			if(!id) id = ++_idc
 
-			if(!questions) questions = new/list()
+			if(!_questions) _questions = new/list()
 
 			var/question/Q = new(id, I)
-			questions += id
-			questions[id] = Q
+			_questions += id
+			_questions[id] = Q
 
-		setupExit()
-			questions.Cut()
-			id_count = 0
-			done_asking = TRUE
+		_setupExit()
+			_questions.Cut()
+			_idc = 0
+			_done_asking = TRUE
 
 		getAnswer(id)
-			if(answers && id in answers) return answers[id]
+			if(_answers && id in _answers) return _answers[id]
+
+		getExitReason()
+			return _exit_reason
 
 		isComplete()
-			return done_asking && exit_reason == EXIT_SUCCESS
+			return _done_asking && _exit_reason == EXIT_SUCCESS
 
 		begin(client/C)
-			if(!questions)
+			if(!_questions)
 				CRASH("Attept to ask about empty form") // Todo: replace with Log
-			if(!answers) answers = new()
+			if(!_answers) _answers = new()
 
 			var/i = 1
-			done_asking = FALSE
-			while(length(answers) < length(questions))
-				var/idx = questions[i]
-				var/question/Q = questions[idx]
-				var/answer = ERROR_INPUT
-				while(answer == ERROR_INPUT)
+			_done_asking = FALSE
+			while(length(_answers) < length(_questions))
+				var/idx = _questions[i]
+				var/question/Q = _questions[idx]
+				var/answer = inputOps.ERROR_INPUT
+				while(answer == inputOps.ERROR_INPUT)
 					if(!C)
-						setupExit()
-						exit_reason = EXIT_DISCONNECT
+						_setupExit()
+						_exit_reason = EXIT_DISCONNECT
 
 					Q.ask(C)
 					if(!C)
-						setupExit()
-						exit_reason = EXIT_DISCONNECT
+						_setupExit()
+						_exit_reason = EXIT_DISCONNECT
 						return
 					answer = Q.getAnswer(C)
 				
@@ -122,18 +125,18 @@ form
 					i--
 					continue
 				else if(answer == ANSWER_EXIT)
-					setupExit()
-					exit_reason = EXIT_EXIT
+					_setupExit()
+					_exit_reason = EXIT_EXIT
 					return
-				else if(answer == ERROR_MISMATCH)
+				else if(answer == inputOps.ERROR_MISMATCH)
 					if(!C)
-						setupExit()
-						exit_reason = EXIT_DISCONNECT
+						_setupExit()
+						_exit_reason = EXIT_DISCONNECT
 						return
 					SendTxt("Invalid input. Try again.", C, DT_MISC, 0)
 					continue
 				else
-					answers[Q.id] = answer
+					_answers[Q.id] = answer
 					i++
-			done_asking = TRUE
-			exit_reason = EXIT_SUCCESS
+			_done_asking = TRUE
+			_exit_reason = EXIT_SUCCESS

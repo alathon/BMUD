@@ -32,7 +32,7 @@ char_template
 			var/InputSettings/S2 = new()
 			S2.setQuestion("\nWhat gender would you like to be? \[#zmale#y female#n\] (Hit enter for male)")
 			S2.setAnswerList(list("male","female"))
-			S2.setAnswerType(ANSWER_TYPE_LIST)
+			S2.setAnswerType(inputOps.ANSWER_TYPE_LIST)
 			S2.setDefaultAnswer("male")
 			F.addQuestion("gender", S2)
 
