@@ -40,11 +40,11 @@ _service/room_manager
 		one.AddExit("north", two)
 		two.AddExit("south", one)
 		var/obj/O = new()
-		O.max_count = 5
-		O.count = 5
-		O.base_name = "rose"
+		O.__maxCount = 5
+		O.__count = 5
+		O.__base_name = "rose"
 		O.keywords = list("rose")
-		O.Update()
+		O.update()
 		O.Move(one)
 		..()
 

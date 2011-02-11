@@ -4,7 +4,7 @@ mob/proc
 			if(istext(Drop) && cmptext(Drop, "all")) // drop all
 				SendTxt("You drop everything you have!", src, DT_MISC, 0)
 				for(var/obj/O in contents)
-					Drop(O,O.count)
+					Drop(O,O.getCount())
 				return 1
 			else
 				SendTxt("Drop what??", src, DT_MISC, 0)
@@ -12,7 +12,7 @@ mob/proc
 
 		if(isnum(amount) && amount < 0) amount = 1
 
-		if(amount == "all" || amount >= Drop.count)
+		if(amount == "all" || amount >= Drop.getCount())
 			var/string = "You drop [Drop.GetName()] on the ground."
 			if(Drop.Move(loc))
 				SendTxt(string, src, DT_MISC)
@@ -21,8 +21,8 @@ mob/proc
 			SendTxt("You cannot drop that here.", src, DT_MISC, 0)
 			return 0
 
-		else if(amount < Drop.count)
-			var/obj/Split = Drop.Split(amount)
+		else if(amount < Drop.getCount())
+			var/obj/Split = Drop.split(amount)
 			var/string = "You drop [Split.GetName()] on the ground"
 			if(Split.Move(loc))
 				SendTxt(string, src)
@@ -30,7 +30,7 @@ mob/proc
 
 			SendTxt("You cannot drop that here.", src, DT_MISC, 0)
 			del Split
-			Drop.AddCount(amount)
+			Drop.__addCount(amount)
 			return 0
 		else
 			CRASH("INVALID CALL TO DROP: [amount]")
@@ -40,8 +40,8 @@ mob/proc
 			if(isobj(Put) && amount == "all") // put all X
 				SendTxt("You put everything you have into [Put.GetName()]", src)
 				for(var/obj/O in contents - Put)
-					if(!O.CanContain()) // Dont try and move containers.
-						Put(O,Put,O.count)
+					if(!O.canContain()) // Dont try and move containers.
+						Put(O,Put,O.getCount())
 				return 1
 			else
 				SendTxt("Put what where?", src, DT_MISC, 1)
@@ -49,32 +49,32 @@ mob/proc
 
 		if(istext(Put) && cmptext(Put, "all")) // Put all in something
 			for(var/obj/O in contents - Container)
-				Put(O,Container,O.count)
+				Put(O,Container,O.getCount())
 			return 1
 
-		if(Put.CanContain())
+		if(Put.canContain())
 			SendTxt("You cannot put a container into something else!", src.client, DT_MISC, 0)
 			return 0
 
 		if(isnum(amount) && amount < 0) amount = 1
-		if(amount == "all" || amount >= Put.count)
+		if(amount == "all" || amount >= Put.getCount())
 			var/string = "You put [Put.GetName()] into [Container.GetName()]"
-			if(Container.CanContain(Put, Put.count))
+			if(Container.canContain(Put, Put.getCount()))
 				if(Put.Move(Container))
 					SendTxt(string, src)
 					return 1
 			SendTxt("There is not enough room in [Container.GetName()] for that.", src)
 			return 0
-		else if(amount < Put.count)
-			if(Container.CanContain(Put, amount))
-				var/obj/Split = Put.Split(amount)
+		else if(amount < Put.getCount())
+			if(Container.canContain(Put, amount))
+				var/obj/Split = Put.split(amount)
 				var/string = "You put [Split.GetName()] into [Container.GetName()]"
 				if(Split.Move(Container))
 					SendTxt(string, src)
 					return 1
 				else
 					del Split
-					Put.AddCount(amount)
+					Put.__addCount(amount)
 			SendTxt("There is not enough room in [Container.GetName()] for that.", src)
 			return 0
 		else
@@ -84,33 +84,34 @@ mob/proc
 		if(!isobj(Get))
 			if(istype(From, /atom) && istext(Get) && cmptext(Get, "all")) // Get all
 				for(var/obj/O in From.contents)
-					Pickup(O,From,O.count)
+					Pickup(O,From,O.getCount())
 				return 1
 			else
 				return 0
 
 		if(isnum(amount) && amount < 0) amount = 1
-		if(!amount || amount == "all" || amount >= Get.count)
+		if(!amount || amount == "all" || amount >= Get.getCount())
 			if(isobj(From))
 				SendTxt("You get [Get.GetName()] from [From.GetName()]", src)
 			else
 				SendTxt("You get [Get.GetName()]", src)
 			Get.Move(src)
 			return 1
-		else if(amount < Get.count) // Not all
-			var/obj/Split = Get.Split(amount)
+		else if(amount < Get.getCount()) // Not all
+			var/obj/Split = Get.split(amount)
+			var/split_name = Split.GetName()
 			if(!Split.Move(src))
-				SendTxt("You were unable to get [Split.GetName()]", src)
-				Get.AddCount(amount)
+				SendTxt("You were unable to get [split_name]", src)
+				Get.__addCount(amount)
 				del Split
 				return 0
 			if(isobj(From))
-				SendTxt("You get [Split.GetName()] from [From.GetName()]", src)
+				SendTxt("You get [split_name] from [From.GetName()]", src)
 			else
-				SendTxt("You get [Split.GetName()]", src)
+				SendTxt("You get [split_name]", src)
 			return 1
 		else
-			CRASH("INVALID CALL TO PICKUP: [amount] > [Get.count]")
+			CRASH("INVALID CALL TO PICKUP: [amount] > [Get.getCount()]")
 
 mob
 	density = 0

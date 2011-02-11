@@ -29,7 +29,7 @@ atom/ParseMatch(Name, multi = 1, ignorecase = 1)
 
 	if(isobj(src)) 
 		var/obj/O = src
-		if(O.base_plural) match += O.base_plural
+		if(O.getPlural()) match += O.getPlural()
 
 	if(!ignorecase) ignorecase = 1 // Always ignore case. <--
 

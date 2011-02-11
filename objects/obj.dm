@@ -6,7 +6,7 @@ obj
 		if(!A) return 0
 
 		if(istype(A, /turf) || istype(A, /room))
-			if(count > 1)
+			if(__count > 1)
 				return "[GetName()] lie here[suffix]"
 			else
 				return "[GetName()] lies here"
@@ -20,12 +20,12 @@ Stacking rules and pluralization, allowing objs to be containers and defining a 
 */
 var
 	list
-		built_in = list("_key", "vars", "count", "name", "suffix", "x", "y", "z", "pixel_x", "pixel_y", "loc", \
+		built_in = list("_key", "vars", "__count", "name", "suffix", "x", "y", "z", "pixel_x", "pixel_y", "loc", \
 				"overlays", "underlays", "verbs", "contents", "gender")
 
 proc
-	TextPlural(base_name)
-		. = base_name
+	TextPlural(__base_name)
+		. = __base_name
 		var/l = length(.)
 		if(l < 2) return . + "'s"
 		var/ch = text2ascii(., l) & 233
@@ -52,74 +52,86 @@ obj
 	gender = "neuter"
 
 	var
-		contains = 0
-		can_contain = 0 // > 0 to make container.
-		base_name = ""
-		base_plural = ""
-		count = 1
-		max_count = 0 // 0 = not stackable
+		__contains = 0
+		__canContain = 0 // > 0 to make container.
+		__base_name = ""
+		__base_plural = ""
+		__count = 1
+		__maxCount = 0 // 0 = not stackable
 
 	proc
-		AddCount()
-		RemCount()
-		Update()
-		Split(n)
-		Pluralize()
-		Match(obj/O)
-		CanContain()
-		Contains()
+		__setCount()
+		__addCount()
+		__remCount()
+		update()
+		split(n)
+		pluralize()
+		match(obj/O)
+		canContain()
+		getPlural()
+		getCount()
+		getContainTotal()
 		__checkContainer()
 
 	New()
 		..()
-		Update()
+		update()
 
 	Entered(obj/O)
-		contains += O.count * O.size
-		Update()
+		__contains += O.__count * O.size
+		update()
 		return 1
 
 	Exited(obj/O)
-		contains -= O.count * O.size
-		Update()
+		__contains -= O.__count * O.size
+		update()
 		return 1
 
-	Contains()
+	getContainTotal()
 		. = 0
 		for(var/obj/O in contents)
-			. += O.count * O.size
+			. += O.__count * O.size
 
-	CanContain(atom/movable/A, amt)
-		if(A) return (can_contain >= Contains() + (A.size*amt))
-		else return can_contain
+	getPlural()
+		return __base_plural
 
-	Update()
-		if(count < 2 && CanContain())
-			name   = base_name
-			suffix = " ([Contains()]/[can_contain])"
-		else if(count > 1)
+	getCount()
+		return __count
+
+	canContain(atom/movable/A, amt)
+		if(A) return (__canContain >= getContainTotal() + (A.size*amt))
+		else return __canContain
+
+	update()
+		if(!__count) del src
+
+		if(__count < 2 && canContain())
+			name   = __base_name
+			suffix = " ([getContainTotal()]/[__canContain])"
+		else if(__count > 1)
 			gender = "plural"
-			suffix = " (x[count])"
-			if(!base_plural) base_plural = TextPlural(base_name)
-			name = base_plural
+			suffix = " (x[__count])"
+			if(!__base_plural) __base_plural = TextPlural(__base_name)
+			name = __base_plural
 		else
 			suffix = ""
-			name = base_name
+			name = __base_name
 			gender = "neuter"
 
-	Pluralize(n = count)
-		return (count && n != 1) ? TextPlural(base_name) : base_name
+	pluralize(n = __count)
+		return (__count && n != 1) ? TextPlural(__base_name) : __base_name
 
-	AddCount(amt)
-		count += amt
-		Update()
+	__setCount(amt)
+		__count = amt
+		update()
 
-	RemCount(amt)
-		count -= amt
-		Update()
-		if(count < 1)
-			del src // Why would we move to null?
-//			loc = null
+	__addCount(amt)
+		__count += amt
+		update()
+
+	__remCount(amt)
+		__count -= amt
+		update()
 
 	Move(atom/dest)
 		if(!dest) return // Don't allow moves into null.
@@ -133,41 +145,22 @@ obj
 	__checkContainer()
 		if(!loc) return // We're nowhere, so nothing to check.
 
-		if(max_count) // Stackable object.
+		if(__maxCount) // Stackable object.
 			for(var/obj/O in loc)
-				if(O != src && O.Match(src))
-					var/can_hold = O.max_count - O.count
+				if(O != src && O.match(src))
+					var/can_hold = O.__maxCount - O.__count
 					if(!can_hold) continue
 
-					var/to_add = (can_hold >= src.count) ? src.count : can_hold
-					O.AddCount(to_add)
-					src.RemCount(to_add)
+					var/to_add = (can_hold >= src.__count) ? src.__count : can_hold
+					O.__addCount(to_add)
+					src.__remCount(to_add)
 					continue
 		if(isobj(loc))
 			var/obj/O = loc
-			O.Update()
-/*
-	MoveTo(atom/container)
-		if(max_count)
-			for(var/obj/O in container)
-				if((O != src) && O.Match(src))
-					var/can_hold = O.max_count - O.count
-					if(!can_hold) continue
-					else if(can_hold >= src.count)
-						O.AddCount(src.count)
-						src.RemCount(src.count)
-						return 1
-					else if(can_hold < src.count)
-						O.AddCount(can_hold)
-						src.RemCount(can_hold)
-						continue
-		loc = container
-		if(isobj(container))
-			container:Update()
-		return src
-*/
-	Match(obj/O)
-		if(!O || !max_count || !O.max_count || O.type != src.type) return 0
+			O.update()
+
+	match(obj/O)
+		if(!O || !__maxCount || !O.__maxCount || O.type != src.type) return 0
 
 		for(var/V in vars)
 			if(V in built_in) continue
@@ -179,16 +172,15 @@ obj
 						return 0
 			else
 				if(vars[V] != O.vars[V])
-					world << "Match([src],[O]) failed on [V]"
+					world << "match([src],[O]) failed on [V]"
 					return 0
 		return 1
 
-	Split(n)
-		if(!count || n >= count || contents.len) return src
+	split(n)
+		if(!__count || n >= __count || contents.len) return src
 		if(n <= 0) return null
 
-		count -= n
-		Update()
+		__remCount(n)
 		var/obj/O = new type(loc)
 		for(var/V in vars)
 			if(vars[V] != initial(vars[V]))
@@ -198,6 +190,5 @@ obj
 					O.vars[V] = L.Copy()
 				else
 					O.vars[V] = vars[V]
-		O.count = n
-		O.Update()
+		O.__setCount(n)
 		return O

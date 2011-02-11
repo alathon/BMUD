@@ -64,3 +64,4 @@ FILE:
 // END_INCLUDE
 
 #define TELNET_MODE // telnet mode defined, by default
+#define DEBUG
