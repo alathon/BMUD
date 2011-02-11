@@ -21,18 +21,10 @@ The form works by allowing the user to opt to go back to the previous step at an
 exit the form completely by typing 'exit'. As such, 'back' and 'exit' are not legal _answers to any _questions
 asked by a form.
 
-_questions are asked in the order they are added, and can be fetched by form.getAnswer(id), where id is the id of
+questions are asked in the order they are added, and can be fetched by form.getAnswer(id), where id is the id of
 the question. If no id is provided, an incremental numerical ID is assigned. Mixing the two is a bad idea, and why
 would you want to be doing that?
 */
-
-var/const
-	EXIT_EXIT = -1
-	EXIT_DISCONNECT = 0
-	EXIT_SUCCESS = 1
-
-	ANSWER_BACK = "*(!@&(*$%&(%*&@#"
-	ANSWER_EXIT = "AKLSJDKL*(*(!@()!_)"
 
 question
 	New(id, InputSettings/settings)
@@ -50,16 +42,25 @@ question
 		id
 
 	proc
+		/* Initiates the input request to the client. */
 		ask(client/C)
-			answer = inputOps.ERROR_INPUT
+			answer = inputOps.ANSWER_ERROR_INPUT
 			_input = new(C, settings)
 			answer = _input.getInput()
-			if(answer == "back") answer = ANSWER_BACK
-			else if(answer == "exit") answer = ANSWER_EXIT
+			//if(answer == "back") answer = formOps.ANSWER_BACK
+			//else if(answer == "exit") answer = formOps.ANSWER_EXIT
 
 		getAnswer()
 			. = answer
 			del _input
+
+
+var/formOptions/formOps = new()
+formOptions
+	var/const
+		EXIT_EXIT = -1
+		EXIT_DISCONNECT = 0
+		EXIT_SUCCESS = 1
 
 form
 	var
@@ -94,7 +95,7 @@ form
 			return _exit_reason
 
 		isComplete()
-			return _done_asking && _exit_reason == EXIT_SUCCESS
+			return _done_asking && _exit_reason == formOps.EXIT_SUCCESS
 
 		begin(client/C)
 			if(!_questions)
@@ -106,32 +107,32 @@ form
 			while(length(_answers) < length(_questions))
 				var/idx = _questions[i]
 				var/question/Q = _questions[idx]
-				var/answer = inputOps.ERROR_INPUT
-				while(answer == inputOps.ERROR_INPUT)
+				var/answer = inputOps.ANSWER_ERROR_INPUT
+				while(answer == inputOps.ANSWER_ERROR_INPUT)
 					if(!C)
 						_setupExit()
-						_exit_reason = EXIT_DISCONNECT
+						_exit_reason = formOps.EXIT_DISCONNECT
 
 					Q.ask(C)
 					if(!C)
 						_setupExit()
-						_exit_reason = EXIT_DISCONNECT
+						_exit_reason = formOps.EXIT_DISCONNECT
 						return
 					answer = Q.getAnswer(C)
-				
-				if(answer == ANSWER_BACK)
+
+				if(answer == inputOps.ANSWER_BACK)
 					if(i == 1) // First question. Backing out here is not allowed.
 						continue
 					i--
 					continue
-				else if(answer == ANSWER_EXIT)
+				else if(answer == inputOps.ANSWER_EXIT)
 					_setupExit()
-					_exit_reason = EXIT_EXIT
+					_exit_reason = formOps.EXIT_EXIT
 					return
-				else if(answer == inputOps.ERROR_MISMATCH)
+				else if(answer == inputOps.ANSWER_ERROR_MISMATCH)
 					if(!C)
 						_setupExit()
-						_exit_reason = EXIT_DISCONNECT
+						_exit_reason = formOps.EXIT_DISCONNECT
 						return
 					SendTxt("Invalid input. Try again.", C, DT_MISC, 0)
 					continue
@@ -139,4 +140,4 @@ form
 					_answers[Q.id] = answer
 					i++
 			_done_asking = TRUE
-			_exit_reason = EXIT_SUCCESS
+			_exit_reason = formOps.EXIT_SUCCESS

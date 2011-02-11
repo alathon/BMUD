@@ -1,14 +1,3 @@
-/*
-var/const
-	ANSWER_TYPE_TEXT = 1
-	ANSWER_TYPE_NUM = 2
-	ANSWER_TYPE_ANY = 3
-	ANSWER_TYPE_LIST = 4
-
-	ERROR_INPUT = "123%&*@&*@#*(!_)!_)#&*!@@()#%"
-	ERROR_MISMATCH = "89234AJKSD!()*@"
-*/
-
 var/inputOptions/inputOps = new()
 
 inputOptions
@@ -18,8 +7,11 @@ inputOptions
 		ANSWER_TYPE_ANY = 3
 		ANSWER_TYPE_LIST = 4
 
-		ERROR_INPUT = "(@)*#()KOASJDLKAJ"
-		ERROR_MISMATCH = "!()@*KALSJDDJKL"
+		ANSWER_ERROR_INPUT = "(@)*#()KOASJDLKAJ"
+		ANSWER_ERROR_MISMATCH = "!()@*KALSJDDJKL"
+		ANSWER_BACK = "back"
+		ANSWER_EXIT = "exit"
+
 		list/exclude_vars = list("type", "parent_type", "vars")
 
 Input
@@ -51,7 +43,7 @@ Input
 				while(!_inputSet) sleep(_loop_time)
 				if(_confirm)
 					if(_confirm_now && prev_input != _input)
-						_parse_err = inputOps.ERROR_MISMATCH
+						_parse_err = inputOps.ANSWER_ERROR_MISMATCH
 					else
 						if(!_confirm_now)
 							_confirm_now = TRUE
@@ -76,7 +68,7 @@ Input
 					. = call(_callback_obj, _callback)(_target, n)
 
 				if(!.)
-//					_parse_err = inputOps.ERROR_INPUT
+					_parse_err = inputOps.ANSWER_ERROR_INPUT
 					break
 
 				if(_answer_type == inputOps.ANSWER_TYPE_LIST)
@@ -86,14 +78,14 @@ Input
 					// Todo: Add support for the autocomplete option
 					if(!(n in _answers + list("back","exit")))
 						SendTxt("Invalid answer.", _target, DT_MISC, 0)
-//						_parse_err = inputOps.ERROR_INPUT
+						_parse_err = inputOps.ANSWER_ERROR_INPUT
 						break
 
 				else if(_answer_type == inputOps.ANSWER_TYPE_NUM)
 					if(n != "back" && n != "exit")
 						n = text2num(n)
 						if(!n)
-//							_parse_err = inputOps.ERROR_INPUT
+							_parse_err = inputOps.ANSWER_ERROR_INPUT
 							break
 
 				_inputSet = TRUE
@@ -116,6 +108,7 @@ Input
 				. =  _input
 
 		receiveInput(n)
+			_parse_err = null
 			if(!_allow_mult && _inputSet) return
 
 			var/p = _parseInput(n)
