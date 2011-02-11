@@ -35,6 +35,15 @@ var/list/directions = list("[NORTH]" = "north", "[SOUTH]" = "south",
 */
 
 proc
+	all_whitespace(text)
+		. = Text2List(text, " ")
+		return length(.) == length(text)
+
+	// Clears any delim in front of text. If both_sides, clears back too.
+	clear(text, delim, both_sides=0)
+		// TODO
+		. = text
+proc
 	TranslateTokens(T,mob/M) // Translates tokens according to values of M
 		if(!M) return T
 
@@ -158,10 +167,10 @@ proc
 			padding += "[char]"
 		. = "[padding][.][padding]"
 
-	Short2Full(short, full, case = 1)
+	Short2Full(short, full, ignorecase = 1)
 		if(!short) return 0
 
-		if(!case)
-			return (cmptextEx(short, copytext(full, 1, length(short)+1)))
+		if(ignorecase)
+			return (cmptext(short, copytext(full, 1, length(short)+1)))
 		else
 			return (cmptextEx(short, copytext(full, 1, length(short)+1)))

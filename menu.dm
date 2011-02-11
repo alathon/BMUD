@@ -54,8 +54,11 @@ menu
 		init = 1
 
 	GetInput(client/C)
-		SendTxt(Display(C), C, DT_MENU)
-		var/get = IO.Input(header, C, ANSWER_TEXT)
+		var/answer == inputOps.ERROR_INPUT
+		while(answer == inputOps.ERROR_INPUT)
+			SendTxt(Display(C), C, DT_MENU)
+			var/Input/I = new(C, header)
+			answer = I.getInput()
 
 		if(!get)
 			return GetInput(C)
@@ -64,7 +67,7 @@ menu
 		for(var/a in choices)
 			if(!C)
 				Cleanup()
-			if(Short2Full(get, a, 0)) // Match
+			if(Short2Full(get, a, 1)) // Match
 				var/item/I = choices[a]
 				var/item_return = I.Do(C)
 				if(item_return == MENU_BACK)

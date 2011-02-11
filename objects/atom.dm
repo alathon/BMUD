@@ -20,7 +20,6 @@ atom
 	Keywords()
 		return keywords
 
-
 atom/ParseMatch(Name, multi = 1, ignorecase = 1)
 	if(!Name) return 0
 	if(!keywords || !length(keywords)) return 0
@@ -43,7 +42,7 @@ atom/ParseMatch(Name, multi = 1, ignorecase = 1)
 	else
 		var/found_it = FALSE
 		for(var/Example in match)
-			if(Name == copytext(Example, 1, length(Name)+1))
+			if(Short2Full(Name, Example, ignorecase))
 				found_it = TRUE
 		if(!found_it)
 			return FALSE

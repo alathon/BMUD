@@ -12,6 +12,8 @@ InputSettings
 		_confirm_now=FALSE
 		_callback
 		_callback_obj
+		_autocomplete = FALSE
+		_allow_empty = FALSE
 		list/_answers
 		_default_answer
 
@@ -20,6 +22,11 @@ InputSettings
 		..()
 
 	proc
+		setAutocomplete(n)
+			_autocomplete = n
+
+		setAllowEmpty(n)
+			_allow_empty = n
 		setAllowMult(n)
 			_allow_mult = n
 

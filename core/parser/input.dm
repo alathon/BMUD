@@ -6,6 +6,7 @@ inputOptions
 		ANSWER_TYPE_NUM = 2
 		ANSWER_TYPE_ANY = 3
 		ANSWER_TYPE_LIST = 4
+		ANSWER_TYPE_YESNO = 5
 
 		ANSWER_ERROR_INPUT = "(@)*#()KOASJDLKAJ"
 		ANSWER_ERROR_MISMATCH = "!()@*KALSJDDJKL"
@@ -26,6 +27,8 @@ Input
 		_parse_err
 		_delete_on_err
 		_case_sensitive
+		_autocomplete
+		_allow_empty
 		_timeout
 		_password
 		_confirm
@@ -62,7 +65,14 @@ Input
 		// Otherwise, should set _inputSet = true and return the input
 		_parseInput(n)
 			if(!n && _default_answer) n = _default_answer
-			while(1)
+
+			// If we don't allow empty answers, and we got an empty
+			// answer OR an answer consisting entirely of whitespace
+			// Then disallow it.
+			if(!_allow_empty && (!n || all_whitespace(n)))
+				_parse_err = inputOps.ANSWER_ERROR_INPUT
+				. = 0
+			else while(1)
 				. = 1 // Assume input is correct
 				if(_callback)
 					. = call(_callback_obj, _callback)(_target, n)
@@ -80,6 +90,10 @@ Input
 						SendTxt("Invalid answer.", _target, DT_MISC, 0)
 						_parse_err = inputOps.ANSWER_ERROR_INPUT
 						break
+
+				else if(_answer_type == inputOps.ANSWER_TYPE_YESNO)
+					if(!Short2Full(lowertext(n), "yes"))
+						n = ""
 
 				else if(_answer_type == inputOps.ANSWER_TYPE_NUM)
 					if(n != "back" && n != "exit")
@@ -118,8 +132,8 @@ Input
 	New(client/D,question, answer_type=inputOps.ANSWER_TYPE_ANY,
 		list/answers, loop_time=2,
 		allow_mult=FALSE, case_sensitive=FALSE,
-		delete_on_err=FALSE, timeout=0,
-		confirm=FALSE, password=FALSE)
+		delete_on_err=FALSE, timeout=0, autocomplete=FALSE,
+		allow_empty=FALSE, confirm=FALSE, password=FALSE)
 
 		if(!D || !question) del src
 
@@ -138,6 +152,8 @@ Input
 			src._delete_on_err = delete_on_err
 			src._case_sensitive = case_sensitive
 			src._answers = answers
+			src._autocomplete = autocomplete
+			src._allow_empty = allow_empty
 			src._password = password
 			src._confirm = confirm
 			src._confirm_now = FALSE

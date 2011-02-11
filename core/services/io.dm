@@ -61,7 +61,7 @@ _service/auto/io
 		..()
 
 	proc
-		Input(txt,client/C,color_return)
+//		Input(txt,client/C,color_return)
 		SendTxt()
 
 
@@ -77,7 +77,7 @@ _service/auto/io
 			if(!istype(a, /atom) && !istype(a, /client)) continue
 			a:RecieveText(txt, data_type, color)
 		T = null
-
+/*
 	Input(t, client/C, answers = ANSWER_TEXT, strict = 1, case = 0, default = "")
 		if(!C)
 			Log("Invalid arguments to IO.Input: ([t],[C],[answers],[strict],[case])", EVENT_PROCFAIL)
@@ -127,5 +127,5 @@ _service/auto/io
 			CRASH("Invalid answers type sent to Input(): [answers]")
 
 		return input
-
+*/
 

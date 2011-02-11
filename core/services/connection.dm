@@ -216,8 +216,9 @@ _service/connection_manager
 		AddOnlineClient(C)
 		if(existing) // This is a 'fresh' client connection. Reconnect if possible
 			if(existing.client)
-				var/a = IO.Input("Someone is already logged into that character. Do you want to replace them?", C, answer = ANSWER_YESNO)
-				if(a && C)
+				var/Input/I = new(C, "Someone is already logged onto that character. Do you want to replace them?", inputOps.ANSWER_TYPE_YESNO)
+				var/answer = I.getInput()
+				if(answer && C)
 					Log("Reconnected client: [C.key] to mob: [existing.GetName()]", EVENT_CONNECTION)
 					SendTxt("Reconnecting...", C, DT_MISC, 0)
 					existing.Login()
