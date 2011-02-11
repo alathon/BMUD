@@ -63,12 +63,12 @@ obj
 		AddCount()
 		RemCount()
 		Update()
-		MoveTo(atom/container)
 		Split(n)
 		Pluralize()
 		Match(obj/O)
 		CanContain()
 		Contains()
+		__checkContainer()
 
 	New()
 		..()
@@ -118,8 +118,35 @@ obj
 		count -= amt
 		Update()
 		if(count < 1)
-			loc = null
+			del src // Why would we move to null?
+//			loc = null
 
+	Move(atom/dest)
+		if(!dest) return // Don't allow moves into null.
+
+		. = ..(dest)
+		if(!.) return
+
+		__checkContainer()
+
+
+	__checkContainer()
+		if(!loc) return // We're nowhere, so nothing to check.
+
+		if(max_count) // Stackable object.
+			for(var/obj/O in loc)
+				if(O != src && O.Match(src))
+					var/can_hold = O.max_count - O.count
+					if(!can_hold) continue
+
+					var/to_add = (can_hold >= src.count) ? src.count : can_hold
+					O.AddCount(to_add)
+					src.RemCount(to_add)
+					continue
+		if(isobj(loc))
+			var/obj/O = loc
+			O.Update()
+/*
 	MoveTo(atom/container)
 		if(max_count)
 			for(var/obj/O in container)
@@ -138,7 +165,7 @@ obj
 		if(isobj(container))
 			container:Update()
 		return src
-
+*/
 	Match(obj/O)
 		if(!O || !max_count || !O.max_count || O.type != src.type) return 0
 

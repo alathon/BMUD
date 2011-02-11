@@ -45,7 +45,7 @@ _service/room_manager
 		O.base_name = "rose"
 		O.keywords = list("rose")
 		O.Update()
-		O.MoveTo(one)
+		O.Move(one)
 		..()
 
 	Unloaded()

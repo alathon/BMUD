@@ -14,7 +14,7 @@ mob/proc
 
 		if(amount == "all" || amount >= Drop.count)
 			var/string = "You drop [Drop.GetName()] on the ground."
-			if(Drop.MoveTo(loc))
+			if(Drop.Move(loc))
 				SendTxt(string, src, DT_MISC)
 				return 1
 
@@ -24,13 +24,13 @@ mob/proc
 		else if(amount < Drop.count)
 			var/obj/Split = Drop.Split(amount)
 			var/string = "You drop [Split.GetName()] on the ground"
-			if(Split.MoveTo(loc))
+			if(Split.Move(loc))
 				SendTxt(string, src)
 				return 1
 
 			SendTxt("You cannot drop that here.", src, DT_MISC, 0)
 			del Split
-			Drop.count += amount
+			Drop.AddCount(amount)
 			return 0
 		else
 			CRASH("INVALID CALL TO DROP: [amount]")
@@ -60,7 +60,7 @@ mob/proc
 		if(amount == "all" || amount >= Put.count)
 			var/string = "You put [Put.GetName()] into [Container.GetName()]"
 			if(Container.CanContain(Put, Put.count))
-				if(Put.MoveTo(Container))
+				if(Put.Move(Container))
 					SendTxt(string, src)
 					return 1
 			SendTxt("There is not enough room in [Container.GetName()] for that.", src)
@@ -69,12 +69,12 @@ mob/proc
 			if(Container.CanContain(Put, amount))
 				var/obj/Split = Put.Split(amount)
 				var/string = "You put [Split.GetName()] into [Container.GetName()]"
-				if(Split.MoveTo(Container))
+				if(Split.Move(Container))
 					SendTxt(string, src)
 					return 1
 				else
 					del Split
-					Put.count += amount
+					Put.AddCount(amount)
 			SendTxt("There is not enough room in [Container.GetName()] for that.", src)
 			return 0
 		else
@@ -95,13 +95,13 @@ mob/proc
 				SendTxt("You get [Get.GetName()] from [From.GetName()]", src)
 			else
 				SendTxt("You get [Get.GetName()]", src)
-			Get.MoveTo(src)
+			Get.Move(src)
 			return 1
 		else if(amount < Get.count) // Not all
 			var/obj/Split = Get.Split(amount)
-			if(!Split.MoveTo(src))
+			if(!Split.Move(src))
 				SendTxt("You were unable to get [Split.GetName()]", src)
-				Get.count += amount
+				Get.AddCount(amount)
 				del Split
 				return 0
 			if(isobj(From))
