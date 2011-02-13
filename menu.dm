@@ -54,34 +54,32 @@ menu
 		init = 1
 
 	GetInput(client/C)
-		var/answer == inputOps.ERROR_INPUT
-		while(answer == inputOps.ERROR_INPUT)
-			SendTxt(Display(C), C, DT_MENU)
-			var/Input/I = new(C, header)
+		var/answer = inputOps.ANSWER_ERROR_INPUT
+		var/InputSettings/IS = new()
+		IS.setQuestion(Display(C))
+		IS.setAnswerList(choices)
+		IS.setAnswerType(inputOps.ANSWER_TYPE_LIST)
+		IS.setCaseSensitive(!lowertext) // Replace the 'lowertext' variable...
+		IS.setAutocomplete(TRUE)
+		while(answer == inputOps.ANSWER_ERROR_INPUT)
+			SendTxt(Display(), C, DT_MENU)
+			var/Input/I = new(C, IS)
 			answer = I.getInput()
 
-		if(!get)
+		if(!C)
+			Cleanup()
+			return
+
+		var/item/I = choices[answer]
+		var/item_ret = I.Do(C)
+		if(item_ret == MENU_BACK)
+			if(father) C.SetMenu(father)
+			else C.SetMenu(null)
+			Cleanup()
+		else if(item_ret == MENU_REPEAT)
 			return GetInput(C)
-
-		if(lowertext) get = lowertext(get)
-		for(var/a in choices)
-			if(!C)
-				Cleanup()
-			if(Short2Full(get, a, 1)) // Match
-				var/item/I = choices[a]
-				var/item_return = I.Do(C)
-				if(item_return == MENU_BACK)
-					if(father)
-						C.SetMenu(father)
-					else
-						C.SetMenu(null)
-					Cleanup()
-				else if(item_return == MENU_REPEAT)
-					break
-				else
-					return item_return
-
-		. = GetInput(C)
+		else
+			return item_ret
 
 	Display()
 		for(var/a in choices)

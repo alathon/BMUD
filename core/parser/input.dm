@@ -72,7 +72,10 @@ Input
 			if(!_allow_empty && (!n || all_whitespace(n)))
 				_parse_err = inputOps.ANSWER_ERROR_INPUT
 				. = 0
-			else while(1)
+
+			var/textCompFunc = ((_case_sensitive) ? "cmptextEx":"cmptext")
+
+			while(1)
 				. = 1 // Assume input is correct
 				if(_callback)
 					. = call(_callback_obj, _callback)(_target, n)
@@ -82,18 +85,18 @@ Input
 					break
 
 				if(_answer_type == inputOps.ANSWER_TYPE_LIST)
-					if(!_case_sensitive)
-						n = lowertext(n)
+					var/match = FALSE
+					for(var/a in _answers + list("back","exit"))
+						match = (_autocomplete) ? Short2Full(n,a,!_case_sensitive) : call(textCompFunc)(n,a)
+						if(match) break
 
-					// Todo: Add support for the autocomplete option
-					if(!(n in _answers + list("back","exit")))
+					if(!match)
 						SendTxt("Invalid answer.", _target, DT_MISC, 0)
 						_parse_err = inputOps.ANSWER_ERROR_INPUT
 						break
 
 				else if(_answer_type == inputOps.ANSWER_TYPE_YESNO)
-					if(!Short2Full(lowertext(n), "yes"))
-						n = ""
+					n = Short2Full(n, "yes", 1)
 
 				else if(_answer_type == inputOps.ANSWER_TYPE_NUM)
 					if(n != "back" && n != "exit")
