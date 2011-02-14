@@ -65,17 +65,15 @@ Input
 		// Otherwise, should set _inputSet = true and return the input
 		_parseInput(n)
 			if(!n && _default_answer) n = _default_answer
-
+			var/textCompFunc = ((_case_sensitive) ? "cmptextEx":"cmptext")
 			// If we don't allow empty answers, and we got an empty
 			// answer OR an answer consisting entirely of whitespace
 			// Then disallow it.
-			if(!_allow_empty && (!n || all_whitespace(n)))
+			if(!_allow_empty && (!n || whitespace(n) == length(n)))
 				_parse_err = inputOps.ANSWER_ERROR_INPUT
 				. = 0
 
-			var/textCompFunc = ((_case_sensitive) ? "cmptextEx":"cmptext")
-
-			while(1)
+			else while(1)
 				. = 1 // Assume input is correct
 				if(_callback)
 					. = call(_callback_obj, _callback)(_target, n)
@@ -87,9 +85,21 @@ Input
 				if(_answer_type == inputOps.ANSWER_TYPE_LIST)
 					var/match = FALSE
 					for(var/a in _answers + list("back","exit"))
-						match = (_autocomplete) ? Short2Full(n,a,!_case_sensitive) : call(textCompFunc)(n,a)
-						if(match) break
-
+						world << "[a] in answers"
+						if(_autocomplete)
+							world << "autocomplete"
+							match = Short2Full(n,a,!_case_sensitive)
+						else
+							world << "No autocomplete"
+							match = call(textCompFunc)(a,n)
+						
+						if(match)
+							world << "Matched."
+							n = a
+							break
+						else
+							world << "No match"
+				
 					if(!match)
 						SendTxt("Invalid answer.", _target, DT_MISC, 0)
 						_parse_err = inputOps.ANSWER_ERROR_INPUT
