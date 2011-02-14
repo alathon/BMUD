@@ -100,8 +100,7 @@ Input
 
 				else if(_answer_type == inputOps.ANSWER_TYPE_NUM)
 					if(n != "back" && n != "exit")
-						n = text2num(n)
-						if(!n)
+						if("[n]" != "[text2num(n)]")
 							_parse_err = inputOps.ANSWER_ERROR_INPUT
 							break
 
