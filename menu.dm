@@ -64,11 +64,13 @@ menu
 		while(answer == inputOps.INPUT_BAD)
 			if(C)
 				answer = In.getInput(C)
-				world << "answer: [answer]"
+				if(answer == inputOps.INPUT_NOT_READY)
+					answer = inputOps.INPUT_BAD
+					sleep(1)
+					continue
 			else
 				Cleanup()
 				return
-			sleep(1)
 
 		if(!C)
 			Cleanup()
