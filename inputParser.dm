@@ -36,7 +36,7 @@ inputParser/default
 				if(I.__defaultAnswer)
 					n = I.__defaultAnswer
 				else if(!I.__allowEmpty)
-					return new/inputError("Invalid chocie")
+					return new/inputError("Invalid choice")
 
 			var/match = FALSE
 			var/list/L = I.__answers.Copy()
@@ -45,7 +45,6 @@ inputParser/default
 			if(I.__allowForward) L += inputOps.INPUT_FORWARD
 
 			for(var/a in L)
-				world << "[a] in L"
 				if(I.__autoComplete)
 					match = inputOps.short2full(n, a, I.__ignoreCase)
 				else
@@ -54,7 +53,6 @@ inputParser/default
 					else
 						match = cmptextEx(n,a)
 				if(match)
-					world << "match"
 					n = a
 					break
 			if(!match)

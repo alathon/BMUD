@@ -1,3 +1,9 @@
+mob
+	proc
+		isIngame()
+			return 1 // Everyone's ingame right now.
+
+// Old, non-revamped code
 mob/proc
 	Drop(obj/Drop, amount)
 		if(!isobj(Drop))
@@ -153,14 +159,3 @@ mob
 			return src.GetDesc(A)
 		else
 			return "Not implemented yet."
-
-	Stat() // DS compliance
-		if(!istype(src, /mob/login))
-			if(statpanel("Character"))
-				stat("Name: ", "[name]")
-				stat("Gender: ", "[gender]")
-				if(length(contents))
-					stat("Inventory", "")
-					stat(contents)
-
-

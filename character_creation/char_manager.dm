@@ -26,30 +26,76 @@ _service/character_manager
 
 
 	proc
-		CharacterMenu()
-		LoadChar()
-		GenerateChar()
+		newClientConnection(client/C)
+			if(!C || !istype(C))
+				Log("Attempt to call newClientConnection with bad argument",
+						EVENT_CHARACTER)
+				return
+			// TODO: Check whether the player was linkdead last, or
+			// we're recovering from a hotboot or similar condition.
+			showCharacterMenu(C)
 
+		showCharacterMenu(client/C)
+			if(!C || !istype(C, /client)) return 0
+			var/menu/login_menu/index/I = new()
+			I.Create()
+			var/menu_input = I.GetInput(C)
+			// Clean up the menu
+			I.Cleanup(1,1)
+			return menu_input
 
-	CharacterMenu(client/C)
-		if(!C || !istype(C, /client)) return 0
-		var/menu/login_menu/index/I = new()
-		I.Create()
-		var/menu_input = I.GetInput(C)
-		// Clean up the menu
-		I.Cleanup(1,1)
-		return menu_input
+		loadChar(client/C)
+			if(!C || !istype(C, /client)) return 0
+			SendTxt("\nThis feature is not yet available. Sorry!\n", C, DT_MISC, 0)
+			return MENU_REPEAT
 
-	LoadChar(client/C)
-		if(!C || !istype(C, /client)) return 0
-		SendTxt("\nThis feature is not yet available. Sorry!\n", C, DT_MISC, 0)
-		return MENU_REPEAT
+		__verify_name(client/C, n)
+			set name = "__verify_name"
+			if(length(n) < 3 || length(n) > 15)
+				return new/inputError("Name must be between 3 - 15 characters")
 
-	GenerateChar(client/C, temp_name)
-		if(!C || !istype(C, /client)) return 0
+		__verify_password(client/C, n)
+			set name = "__verify_password"
+			if(length(n) < 7)
+				return new/inputError("Password must be at least 7 characters.")
 
-		var/char_template/T = new()
-		return T.GenChar(C)
+		generateChar(client/C)
+			var/form/F = new()
+			var/Input/I
+
+			I = new("\nWhat is your name? (Type #zexit#n to quit)",
+					inputOps.ANSWER_TYPE_ANY)
+			I.setCallback(src, "__verify_name")
+			F.addQuestion("name", I)
+
+			I = new("\nWhat gender would you like to be? \[#zmale#y female#n\] (Hit enter for male)", inputOps.ANSWER_TYPE_LIST)
+			I.setAnswerlist(list("male","female"))
+			I.setDefault("male") // TODO:
+			F.addQuestion("gender", I)
+
+			I = new("\nPlease enter a password:",
+					inputOps.ANSWER_TYPE_ANY)
+			I.setConfirm("Please type it again:")
+			I.setCallback(src, "__verify_password")
+			F.addQuestion("password", I)
+			F.begin(C)
+			if(F.isComplete() && C)
+				var/char_name = F.getAnswer("name")
+				var/char_pass = F.getAnswer("password")
+				var/char_gender = F.getAnswer("gender")
+				del F
+
+				var/mob/M = new()
+				var/mob/Old = C.mob
+				M.key = C.key
+				M.name = uppertext(copytext(char_name, 1, 2))+copytext(char_name, 2)
+				M.gender = char_gender
+				M.password = char_pass // Todo: Hash it
+				if(Old) del Old
+				M.keywords = list(lowertext(M.name),"mobile","player")
+				M.Move(room_manager.GetRoom(1,1))
+				return M
+			else return C
 
 // Login menu and character creation/loading
 menu/login_menu/index
@@ -63,12 +109,12 @@ item/login_menu
 	create_char
 		Do(client/C)
 			if(character_manager)
-				return character_manager.GenerateChar(C, "default")
+				return character_manager.generateChar(C, "default")
 
 	load_char
 		Do(client/C)
 			if(character_manager)
-				return character_manager.LoadChar(C, "default")
+				return character_manager.loadChar(C, "default")
 
 	about
 		Do(client/C)
@@ -77,15 +123,3 @@ item/login_menu
 			. += "Please bear with me, during this time :) I'll think of a more creative about text later.\n"
 			SendTxt(., C)
 			. = MENU_REPEAT
-
-
-
-
-
-
-
-
-
-
-
-

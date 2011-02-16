@@ -64,9 +64,11 @@ menu
 		while(answer == inputOps.INPUT_BAD)
 			if(C)
 				answer = In.getInput(C)
+				world << "answer: [answer]"
 			else
 				Cleanup()
 				return
+			sleep(1)
 
 		if(!C)
 			Cleanup()
@@ -109,7 +111,8 @@ item/exit
 		var/menu/M = C.current_menu
 		if(M)
 			M.Cleanup(1,1)
-		C.ExitGame()
+		//C.ExitGame() // TODO: Do we need to replace this?
+		del C // Or can we just del?
 
 // Generic back item. Either moves up one menu, or cleans up the menu if its a total exit from it.
 item/back

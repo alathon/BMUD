@@ -14,8 +14,7 @@ client/Command(T)
 		return
 
 	else if(!T || copytext(T, 1, 2) == " ")
-		if(client_type == CLIENT_TELNET)
-			src << "> \..."
+		src << "> \..."
 		return
 
 	else if(parser && mob)
@@ -24,8 +23,7 @@ client/Command(T)
 		else
 			Log("[(src.mob ? src.mob.name : src.ckey)]: [T]", EVENT_BADCOMMAND)
 
-	if(client_type == CLIENT_TELNET)
-		src << "> \..."
+	src << "> \..."
 
 Command
 	format = "" // Set default format to "", as opposed to the regular "&"
@@ -37,11 +35,11 @@ Command
 			if("loc")
 				return temp_center.loc
 			if("online_players")
-				if(connection_manager) return connection_manager.online_players
+				if(connection_manager) return connection_manager.getOnlinePlayers()
 			if("online_clients")
-				if(connection_manager) return connection_manager.online_clients
+				if(connection_manager) return connection_manager.getOnlineClients()
 			if("linkdead_players")
-				if(connection_manager) return connection_manager.linkdead_players
+				if(connection_manager) return connection_manager.getLinkdeadPlayers()
 			if("ground")
 				return temp_center.loc.contents
 			else
@@ -106,4 +104,3 @@ _service/parser
 	Unloaded()
 		if(parser) parser = null
 		..()
-

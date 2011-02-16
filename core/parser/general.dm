@@ -25,16 +25,17 @@ Command/MUD
 		Process(mob/user)
 			..()
 			SendTxt("Bye!", user, DT_MISC, 0)
-			if(user.client)
-				user.client.Logout()
+			SendTxt("TODO: Implement logging out")
+			//if(user.client)
+			//	user.client.Logout()
 
 	Who
 		format = "~'who'"
 		Process(mob/user)
 			..()
-			if(!connection_manager) return 0
-			SendTxt("The following players are online ([length(connection_manager.online_players)]):", user, DT_MISC, 0)
-			for(var/mob/M in connection_manager.online_players)
+			var/list/players=connection_manager.getOnlinePlayers()
+			SendTxt("The following players are online ([length(players)]):", user, DT_MISC, 0)
+			for(var/mob/M in players)
 				SendTxt(M.GetName(), user, DT_MISC, 0)
 
 	Look

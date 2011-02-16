@@ -30,7 +30,6 @@ FILE:
 #include <alathon\services\services.dme>
 #include "/home/alathon/workspace/telnet_input/telnet_input.dme"
 #include "character_creation\char_manager.dm"
-#include "character_creation\char_template.dm"
 #include "core\_constants.dm"
 #include "core\bits.dm"
 #include "core\booting.dm"

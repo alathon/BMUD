@@ -56,7 +56,7 @@ _service/color_manager
 		html_sequences = null
 		telnet_sequences = null
 
-	Colorize(text, color_mode = HTML_COLOR)
+	Colorize(text, color_mode = TELNET_COLOR)
 		switch(color_mode)
 			if(TELNET_COLOR)
 				return TelnetColor(text)

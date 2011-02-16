@@ -28,7 +28,7 @@ MUST be a number or the query is repeated.
 client
 	proc/RecieveText(T, data_type, colorize = 1)
 		if(colorize && color_manager)
-			T = color_manager.Colorize(T, client_type)
+			T = color_manager.Colorize(T)
 		src << T
 		if(mob && mob.tracer) mob.tracer.Input(T, data_type)
 		return T
@@ -39,7 +39,7 @@ mob
 	RecieveText(txt, data_type, colorize = 0)
 		if(client)
 			if(colorize && color_manager)
-				txt = color_manager.Colorize(txt, client.client_type)
+				txt = color_manager.Colorize(txt)
 			src << txt
 		..()
 
