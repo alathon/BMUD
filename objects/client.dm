@@ -1,7 +1,6 @@
 client
 	var
 		menu/current_menu = null
-		Input/_target
 
 	proc
 		Percieve()

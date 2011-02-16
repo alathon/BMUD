@@ -26,118 +26,111 @@ the question. If no id is provided, an incremental numerical ID is assigned. Mix
 would you want to be doing that?
 */
 
-question
-	New(id, InputSettings/settings)
-		if(!id || !istype(settings, /InputSettings))
-			CRASH("Attempt to create invalid question.")
-
-		src.id = id
-		src.settings = settings
-
-	var
-		InputSettings/settings
-		Input/_input
-		callback_func
-		answer
-		id
-
-	proc
-		/* Initiates the input request to the client. */
-		ask(client/C)
-			answer = inputOps.ANSWER_ERROR_INPUT
-			_input = new(C, settings)
-			answer = _input.getInput()
-			//if(answer == "back") answer = formOps.ANSWER_BACK
-			//else if(answer == "exit") answer = formOps.ANSWER_EXIT
-
-		getAnswer()
-			. = answer
-			del _input
-
-
 var/formOptions/formOps = new()
 formOptions
 	var/const
 		EXIT_EXIT = -1
 		EXIT_DISCONNECT = 0
-		EXIT_SUCCESS = 1
+		EXIT_COMPLETE = 1
+
+	var/const
+		STATE_INIT = 1
+		STATE_READY = 2
+		STATE_WORKING = 3
+		STATE_DONE  = 4
 
 form
 	var
-		_done_asking = FALSE
-		_idc=0
-		list/_questions // _questions are indexed by the question 'id'.
-		list/_answers
-		_exit_reason
+		__state
+		__exitMethod
+		__allowExit = TRUE
+		__allowBack = TRUE
+		__allowForward = TRUE
+		__currentQuestion = 1
+
+		list/__answers = new()
+		list/__questions = new()
+
+	New()
+		__state = formOps.STATE_READY
 
 	proc
-		addQuestion(id, InputSettings/I)
-			if(!istype(I, /InputSettings))
-				CRASH("Non-InputSettings object passed to form.addQuestion() for id:[id]") // Todo: replace with Log
+		__allAnswered()
+			for(var/a = 1 to length(__answers))
+				var/idx = __answers[a]
+				if(__answers[idx] == inputOps.INPUT_BAD)
+					return FALSE
+			return TRUE
 
-			if(!id) id = ++_idc
+		__findMissingQuestion()
+			var/idx = __currentQuestion+1
+			if(idx > length(__answers)) idx = 1
 
-			if(!_questions) _questions = new/list()
+			for(var/a = idx to length(__answers))
+				var/aidx = __answers[a]
+				if(__answers[aidx] == inputOps.INPUT_BAD) return a
+			return 0
 
-			var/question/Q = new(id, I)
-			_questions += id
-			_questions[id] = Q
+		getAnswer(key)
+			if(key in __answers) return __answers[key]
 
-		_setupExit()
-			_questions.Cut()
-			_idc = 0
-			_done_asking = TRUE
+		addQuestion(key, Input/I)
+			if(__allowExit)
+				I.setAllowExit(TRUE)
+			if(__allowBack)
+				I.setAllowBack(TRUE)
+			if(__allowForward)
+				I.setAllowForward(TRUE)
 
-		getAnswer(id)
-			if(_answers && id in _answers) return _answers[id]
-
-		getExitReason()
-			return _exit_reason
+			__questions += key
+			__questions[key] = I
+			__answers += key
+			__answers[key] = inputOps.INPUT_BAD
 
 		isComplete()
-			return _done_asking && _exit_reason == formOps.EXIT_SUCCESS
+			return (__allAnswered() && __exitMethod == formOps.EXIT_COMPLETE)
 
 		begin(client/C)
-			if(!_questions)
-				CRASH("Attept to ask about empty form") // Todo: replace with Log
-			if(!_answers) _answers = new()
+			if(__state != formOps.STATE_READY) return
+			if(!C) return
 
-			var/i = 1
-			_done_asking = FALSE
-			while(length(_answers) < length(_questions))
-				var/idx = _questions[i]
-				var/question/Q = _questions[idx]
-				var/answer = inputOps.ANSWER_ERROR_INPUT
-				while(answer == inputOps.ANSWER_ERROR_INPUT)
-					if(!C)
-						_setupExit()
-						_exit_reason = formOps.EXIT_DISCONNECT
+			__state = formOps.STATE_WORKING
+			while(__state == formOps.STATE_WORKING)
+				if(!C)
+					__state = formOps.STATE_DONE
+					__exitMethod = formOps.EXIT_DISCONNECT
+					return formOps.EXIT_DISCONNECT
 
-					Q.ask(C)
-					if(!C)
-						_setupExit()
-						_exit_reason = formOps.EXIT_DISCONNECT
-						return
-					answer = Q.getAnswer(C)
+				var/idx = __questions[__currentQuestion]
+				var/Input/I = __questions[idx]
+				var/answer = I.getInput(C)
 
-				if(answer == inputOps.ANSWER_BACK)
-					if(i == 1) // First question. Backing out here is not allowed.
+				if(answer == inputOps.INPUT_EXIT)
+					__state = formOps.STATE_DONE
+					__exitMethod = formOps.EXIT_EXIT
+					return formOps.EXIT_EXIT
+				else if(answer == inputOps.INPUT_BACK)
+					if(!__currentQuestion)
+						if(C) SendTxt("You cannot go back any further.", C, DT_MISC, 0)
 						continue
-					i--
+					__currentQuestion--
 					continue
-				else if(answer == inputOps.ANSWER_EXIT)
-					_setupExit()
-					_exit_reason = formOps.EXIT_EXIT
-					return
-				else if(answer == inputOps.ANSWER_ERROR_MISMATCH)
-					if(!C)
-						_setupExit()
-						_exit_reason = formOps.EXIT_DISCONNECT
-						return
-					SendTxt("Invalid input. Try again.", C, DT_MISC, 0)
+				else if(answer == inputOps.INPUT_FORWARD)
+					if(__currentQuestion == length(__questions))
+						if(C)
+							SendTxt("There are no other questions to answer.", C, DT_MISC, 0)
+						continue
+					__currentQuestion++
 					continue
-				else
-					_answers[Q.id] = answer
-					i++
-			_done_asking = TRUE
-			_exit_reason = formOps.EXIT_SUCCESS
+
+				idx = __answers[__currentQuestion]
+				__answers[idx] = answer
+				if(__allAnswered())
+					break
+
+				// Next question.
+				__currentQuestion = __findMissingQuestion()
+
+			__state = formOps.STATE_DONE
+			__exitMethod = formOps.EXIT_COMPLETE
+			return __exitMethod

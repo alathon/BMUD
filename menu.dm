@@ -54,17 +54,19 @@ menu
 		init = 1
 
 	GetInput(client/C)
-		var/answer = inputOps.ANSWER_ERROR_INPUT
-		var/InputSettings/IS = new()
-		IS.setQuestion(Display(C))
-		IS.setAnswerList(choices)
-		IS.setAnswerType(inputOps.ANSWER_TYPE_LIST)
-		IS.setCaseSensitive(!lowertext) // Replace the 'lowertext' variable...
-		IS.setAutocomplete(TRUE)
-		while(answer == inputOps.ANSWER_ERROR_INPUT)
-			SendTxt(Display(), C, DT_MENU)
-			var/Input/I = new(C, IS)
-			answer = I.getInput()
+		var/Input/In = new(Display(), inputOps.ANSWER_TYPE_LIST)
+		In.setAnswerlist(choices)
+		In.setAutocomplete(TRUE)
+		In.setIgnorecase(TRUE)
+		In.setStrictmode(FALSE)
+		In.setDelonexit(FALSE)
+		var/answer = inputOps.INPUT_BAD
+		while(answer == inputOps.INPUT_BAD)
+			if(C)
+				answer = In.getInput(C)
+			else
+				Cleanup()
+				return
 
 		if(!C)
 			Cleanup()

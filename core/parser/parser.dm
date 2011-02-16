@@ -9,8 +9,8 @@ The entry-point into the parser is client/Command().
 */
 
 client/Command(T)
-	if(_target)
-		_target.receiveInput(T)
+	if(__target)
+		__target.receiveInput(T)
 		return
 
 	else if(!T || copytext(T, 1, 2) == " ")

@@ -28,6 +28,7 @@ FILE:
 // BEGIN_INCLUDE
 #include <abyssdragon\parser\Parser.dme>
 #include <alathon\services\services.dme>
+#include "/home/alathon/workspace/telnet_input/telnet_input.dme"
 #include "character_creation\char_manager.dm"
 #include "character_creation\char_template.dm"
 #include "core\_constants.dm"
@@ -40,8 +41,6 @@ FILE:
 #include "core\parser\movement.dm"
 #include "core\parser\object_manipulation.dm"
 #include "core\parser\parser.dm"
-#include "core\parser\input.dm"
-#include "core\parser\inputsettings.dm"
 #include "core\services\color.dm"
 #include "core\services\connection.dm"
 #include "core\services\io.dm"
@@ -54,6 +53,7 @@ FILE:
 #include "objects\datum.dm"
 #include "menu.dm"
 #include "form.dm"
+#include "inputParser.dm"
 #include "objects\mob.dm"
 #include "objects\obj.dm"
 #include "objects\atom.dm"

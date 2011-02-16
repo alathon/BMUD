@@ -11,47 +11,37 @@ char_template
 	proc
 		verify_name(client/C, n)
 			if(length(n) < 3 || length(n) > 15)
-				SendTxt("Name must be between 3 - 15 characters.", C)
-				return 0
-			return 1
+				return new/inputError("Name must be between 3 - 15 characters")
 
 		verify_password(client/C, n)
 			if(length(n) < 7)
-				SendTxt("Password must be at least 7 characters.", C)
-				return 0
-			return 1
+				return new/inputError("Password must be at least 7 characters.")
 
 		GenChar(client/C)
 			var/form/F = new()
+			var/Input/I
 
-			var/InputSettings/S = new()
-			S.setQuestion("\nWhat is your name? (Type #zexit#n to quit)")
-			S.setCallback(src, "verify name")
-			F.addQuestion("name", S)
+			I = new("\nWhat is your name? (Type #zexit#n to quit)",
+					inputOps.ANSWER_TYPE_ANY)
+			I.setCallback(src, "verify name")
+			F.addQuestion("name", I)
 
-			var/InputSettings/S2 = new()
-			S2.setQuestion("\nWhat gender would you like to be? \[#zmale#y female#n\] (Hit enter for male)")
-			S2.setAnswerList(list("male","female"))
-			S2.setAnswerType(inputOps.ANSWER_TYPE_LIST)
-			S2.setDefaultAnswer("male")
-			F.addQuestion("gender", S2)
+			I = new("\nWhat gender would you like to be? \[#zmale#y female#n\] (Hit enter for male)", inputOps.ANSWER_TYPE_LIST)
+			I.setAnswerlist(list("male","female"))
+			I.setDefault("male") // TODO:
+			F.addQuestion("gender", I)
 
-			var/InputSettings/S3 = new()
-			S3.setQuestion("\nWhat would you like your password to be?")
-			S3.setConfirm("\nPlease confirm by typing password again.")
-			S3.setPassword(TRUE)
-			S3.setCallback(src, "verify password")
-			F.addQuestion("password", S3)
-
-			var/InputSettings/S4 = new()
-			S4.setQuestion("\nHit enter to enter the world!")
-			F.addQuestion("confirm", S4)
-
+			I = new("\nPlease enter a password:",
+					inputOps.ANSWER_TYPE_ANY)
+			I.setConfirm("Please type it again:")
+			I.setCallback(src, "verify password")
+			F.addQuestion("password", I)
 			F.begin(C)
 			if(F.isComplete() && C)
 				var/char_name = F.getAnswer("name")
 				var/char_pass = F.getAnswer("password")
 				var/char_gender = F.getAnswer("gender")
+				del F
 
 				var/mob/M = new()
 				var/mob/Old = C.mob
