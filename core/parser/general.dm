@@ -36,7 +36,7 @@ Command/MUD
 			var/list/players=connection_manager.getOnlinePlayers()
 			SendTxt("The following players are online ([length(players)]):", user, DT_MISC, 0)
 			for(var/mob/M in players)
-				SendTxt(M.GetName(), user, DT_MISC, 0)
+				SendTxt(M.getName(), user, DT_MISC, 0)
 
 	Look
 		format = "~'look'; ?'at'; obj(contents, user)|obj(ground, user)|mob(ground, user)"

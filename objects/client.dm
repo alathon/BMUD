@@ -23,11 +23,11 @@ client
 				return LookInvalid(target)
 
 	LookMob(mob/M)
-		SendTxt(M.DescribeSelf(src), src)
+		SendTxt(M.describeSelf(src), src)
 		return 1
 
 	LookObj(obj/O)
-		SendTxt(O.DescribeSelf(src), src)
+		SendTxt(O.describeSelf(src), src)
 		return 1
 
 	LookInvalid(T)

@@ -1,17 +1,17 @@
 obj
-	GetName()
+	getName()
 		return "\an [src]"
 
-	DescribeSelf(atom/A)
+	describeSelf(atom/A)
 		if(!A) return 0
 
 		if(istype(A, /turf) || istype(A, /room))
 			if(__count > 1)
-				return "[GetName()] lie here[suffix]"
+				return "[getName()] lie here[suffix]"
 			else
-				return "[GetName()] lies here"
+				return "[getName()] lies here"
 		else if(istype(A, /mob))
-			return "[GetName()][suffix]"
+			return "[getName()][suffix]"
 		else
 			return "Not implemented yet!"
 

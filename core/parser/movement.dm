@@ -1,9 +1,9 @@
 mob/proc
 	Movement(d)
 		var/room/R = src.loc
-		if(R.IsExit(d))
-			var/room/NewR = R.exits[d]
-			src.Move(NewR)
+		var/room/N = R.hasExit(d)
+		if(N && istype(N))
+			src.Move(N)
 		else
 			if(client)
 				SendTxt("You can't move there.", src, DT_MISC, 0)

@@ -62,7 +62,7 @@ room_cluster
 		if(!rooms || uid > len || uid < 1) return 0
 
 		var/room/R = rooms[uid]
-		R.RemoveSelf()
+		del R // TODO: Clean up R properly, move players out, etc.
 		if(uid == len)
 			rooms.len--
 		else

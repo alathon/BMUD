@@ -1,4 +1,7 @@
 mob
+	var
+		direction
+
 	proc
 		isIngame()
 			return 1 // Everyone's ingame right now.
@@ -19,7 +22,7 @@ mob/proc
 		if(isnum(amount) && amount < 0) amount = 1
 
 		if(amount == "all" || amount >= Drop.getCount())
-			var/string = "You drop [Drop.GetName()] on the ground."
+			var/string = "You drop [Drop.getName()] on the ground."
 			if(Drop.Move(loc))
 				SendTxt(string, src, DT_MISC)
 				return 1
@@ -29,7 +32,7 @@ mob/proc
 
 		else if(amount < Drop.getCount())
 			var/obj/Split = Drop.split(amount)
-			var/string = "You drop [Split.GetName()] on the ground"
+			var/string = "You drop [Split.getName()] on the ground"
 			if(Split.Move(loc))
 				SendTxt(string, src)
 				return 1
@@ -44,7 +47,7 @@ mob/proc
 	Put(obj/Put,obj/Container,amount)
 		if(!isobj(Container))
 			if(isobj(Put) && amount == "all") // put all X
-				SendTxt("You put everything you have into [Put.GetName()]", src)
+				SendTxt("You put everything you have into [Put.getName()]", src)
 				for(var/obj/O in contents - Put)
 					if(!O.canContain()) // Dont try and move containers.
 						Put(O,Put,O.getCount())
@@ -64,24 +67,24 @@ mob/proc
 
 		if(isnum(amount) && amount < 0) amount = 1
 		if(amount == "all" || amount >= Put.getCount())
-			var/string = "You put [Put.GetName()] into [Container.GetName()]"
+			var/string = "You put [Put.getName()] into [Container.getName()]"
 			if(Container.canContain(Put, Put.getCount()))
 				if(Put.Move(Container))
 					SendTxt(string, src)
 					return 1
-			SendTxt("There is not enough room in [Container.GetName()] for that.", src)
+			SendTxt("There is not enough room in [Container.getName()] for that.", src)
 			return 0
 		else if(amount < Put.getCount())
 			if(Container.canContain(Put, amount))
 				var/obj/Split = Put.split(amount)
-				var/string = "You put [Split.GetName()] into [Container.GetName()]"
+				var/string = "You put [Split.getName()] into [Container.getName()]"
 				if(Split.Move(Container))
 					SendTxt(string, src)
 					return 1
 				else
 					del Split
 					Put.__addCount(amount)
-			SendTxt("There is not enough room in [Container.GetName()] for that.", src)
+			SendTxt("There is not enough room in [Container.getName()] for that.", src)
 			return 0
 		else
 			CRASH("INVALID CALL TO PUT: [amount]")
@@ -98,21 +101,21 @@ mob/proc
 		if(isnum(amount) && amount < 0) amount = 1
 		if(!amount || amount == "all" || amount >= Get.getCount())
 			if(isobj(From))
-				SendTxt("You get [Get.GetName()] from [From.GetName()]", src)
+				SendTxt("You get [Get.getName()] from [From.getName()]", src)
 			else
-				SendTxt("You get [Get.GetName()]", src)
+				SendTxt("You get [Get.getName()]", src)
 			Get.Move(src)
 			return 1
 		else if(amount < Get.getCount()) // Not all
 			var/obj/Split = Get.split(amount)
-			var/split_name = Split.GetName()
+			var/split_name = Split.getName()
 			if(!Split.Move(src))
 				SendTxt("You were unable to get [split_name]", src)
 				Get.__addCount(amount)
 				del Split
 				return 0
 			if(isobj(From))
-				SendTxt("You get [split_name] from [From.GetName()]", src)
+				SendTxt("You get [split_name] from [From.getName()]", src)
 			else
 				SendTxt("You get [split_name]", src)
 			return 1
@@ -134,7 +137,7 @@ mob
 			if(!a && !b)
 				if(istype(loc, /room))
 					var/room/R = loc
-					SendTxt(R.DescribeSelf(src), src)
+					SendTxt(R.describeSelf(src), src)
 				else if(istype(loc, /turf))
 					return Look(20,10)
 				else
@@ -142,7 +145,7 @@ mob
 					return
 			else
 				if(istype(a, /atom))
-					SendTxt(a:DescribeSelf(src), src)
+					SendTxt(a:describeSelf(src), src)
 				
 				/* Phased out: Support for maps
 				else if(isnum(a) && isnum(b))
@@ -150,11 +153,11 @@ mob
 				*/
 
 
-	DescribeSelf(atom/A)
+	describeSelf(atom/A)
 		if(!A) return 0
 
 		if(istype(A, /turf) || istype(A, /room))
-			return GetName()
+			return getName()
 		else if(istype(A, /mob))
 			return src.GetDesc(A)
 		else

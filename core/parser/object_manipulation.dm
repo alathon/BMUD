@@ -108,7 +108,7 @@ Command/MUD/obj_manip
 
 				var/obj/Get = MatchAtom(obj_get, From, /obj)
 				if(!Get)
-					SendTxt("Couldn't find [obj_get] in [From.GetName()]. Sorry!", user, DT_MISC, 0)
+					SendTxt("Couldn't find [obj_get] in [From.getName()]. Sorry!", user, DT_MISC, 0)
 					return 0
 
 				user.Pickup(Get,From,amount)
@@ -137,7 +137,7 @@ Command/MUD/obj_manip
 			..()
 			. = "You are carrying the following items:\n"
 			for(var/obj/O in user)
-				. += "[O.DescribeSelf(user)]\n"
+				. += "[O.describeSelf(user)]\n"
 			SendTxt(., user, DT_MISC)
 
 Command/MUD/error
@@ -156,7 +156,7 @@ Command/MUD/error
 				SendTxt("Put into what?", user.client, DT_MISC, 0)
 				return 0
 			else
-				SendTxt("Put [put.GetName()] into what?", user.client, DT_MISC, 0)
+				SendTxt("Put [put.getName()] into what?", user.client, DT_MISC, 0)
 				return 0
 
 	put_error_2
@@ -166,7 +166,7 @@ Command/MUD/error
 				SendTxt("Put into what?", user.client, DT_MISC, 0)
 				return 0
 			else
-				SendTxt("Put [put.GetName()] into what?", user.client, DT_MISC, 0)
+				SendTxt("Put [put.getName()] into what?", user.client, DT_MISC, 0)
 				return 0
 
 

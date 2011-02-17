@@ -19,13 +19,13 @@ Command/MUD/Chat
 				return 1
 
 			if(!T || T == " ")
-				SendTxt("Tell [target.GetName()] what?", user, DT_MISC, 0)
+				SendTxt("Tell [target.getName()] what?", user, DT_MISC, 0)
 				return 1
 
 
-			SendTxt("You tell [target.GetName()], '[T]'", user, DT_PRIV)
-			SendTxt("[user.GetName()] tells you, '[T]'", target, DT_PRIV)
-			Log("[user.GetName()] tells [target.GetName()], '[T]'", EVENT_CHAT)
+			SendTxt("You tell [target.getName()], '[T]'", user, DT_PRIV)
+			SendTxt("[user.getName()] tells you, '[T]'", target, DT_PRIV)
+			Log("[user.getName()] tells [target.getName()], '[T]'", EVENT_CHAT)
 			return 1
 
 		Tell_error
@@ -46,7 +46,7 @@ Command/MUD/Chat
 
 			if(user.loc)
 				for(var/mob/M in user.loc.contents - user)
-					SendTxt("[user.GetName()] says, '[T]'#n", M, DT_MISC)
+					SendTxt("[user.getName()] says, '[T]'#n", M, DT_MISC)
 				SendTxt("You say, '[T]'#n", user, DT_MISC)
-				Log("[user.GetName()] says, '[T]'", EVENT_CHAT)
+				Log("[user.getName()] says, '[T]'", EVENT_CHAT)
 				return 1

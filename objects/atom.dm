@@ -7,11 +7,11 @@ atom
 
 	proc
 		Keywords()
-		GetName()
+		getName()
 		GetDesc()
-		DescribeSelf()
+		describeSelf()
 
-	GetName()
+	getName()
 		return "\a [src][suffix]"
 
 	GetDesc()

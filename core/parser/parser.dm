@@ -66,7 +66,8 @@ Parser/MUD
 	proc/CheckMoveCommand(T, mob/M)
 		if(M && M.loc && istype(M.loc, /room))
 			var/room/R = M.loc
-			for(var/Exit in R.exits)
+			var/list/Exits = R.exits2text()
+			for(var/Exit in Exits)
 				if(T == copytext(Exit, 1, length(T)+1))
 					M.Movement(Exit)
 					return 1

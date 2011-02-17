@@ -37,8 +37,8 @@ _service/room_manager
 		var/room/two = C.CreateRoom("Test Two", "Test Two Description")
 		C.AddRoom(one)
 		C.AddRoom(two)
-		one.AddExit("north", two)
-		two.AddExit("south", one)
+		one.north = two
+		two.south = one
 		var/obj/O = new()
 		O.__maxCount = 5
 		O.__count = 5
