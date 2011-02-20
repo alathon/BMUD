@@ -17,6 +17,7 @@ _service/character_manager
 	dependencies = list("ConnectionManager", "IO")
 
 	Loaded()
+		__createLoginMenu()
 		if(!character_manager) character_manager = src
 		..()
 
@@ -26,6 +27,18 @@ _service/character_manager
 
 
 	proc
+		__createLoginMenu()
+			var/menu/root = new()
+			var/menu/create = new("create",
+					"(#rC#n)reate a new character")
+			create.setForm(characterForm(),
+					new/callWrapper(src,"parseCharacterForm"))
+
+			var/menu/quit = new("quit", "(#bQ#n)uit the game")
+			quit.setCallback(new/callWrapper(src,"quitClient"))
+			root.attach(create, quit)
+			menuOps.addMenu(root, "login")
+
 		newClientConnection(client/C)
 			if(!C || !istype(C))
 				Log("Attempt to call newClientConnection with bad argument",
@@ -36,18 +49,13 @@ _service/character_manager
 			showCharacterMenu(C)
 
 		showCharacterMenu(client/C)
-			if(!C || !istype(C, /client)) return 0
-			var/menu/login_menu/index/I = new()
-			I.Create()
-			var/menu_input = I.GetInput(C)
-			// Clean up the menu
-			I.Cleanup(1,1)
-			return menu_input
+			var/menu/M = menuOps.getMenu("login")
+			M.ask(C)
 
-		loadChar(client/C)
-			if(!C || !istype(C, /client)) return 0
-			SendTxt("\nThis feature is not yet available. Sorry!\n", C, DT_MISC, 0)
-			return MENU_REPEAT
+		quitClient(client/C, menu/M)
+			SendTxt("Goodbye!", C)
+			del C
+			return menuOps.MENU_EXIT
 
 		__verify_name(client/C, n)
 			set name = "__verify_name"
@@ -59,7 +67,7 @@ _service/character_manager
 			if(length(n) < 7)
 				return new/inputError("Password must be at least 7 characters.")
 
-		generateChar(client/C)
+		characterForm()
 			var/form/F = new()
 			var/Input/I
 
@@ -78,12 +86,13 @@ _service/character_manager
 			I.setConfirm("Please type it again:")
 			I.setCallback(src, "__verify_password")
 			F.addQuestion("password", I)
-			F.begin(C)
+			return F
+
+		parseCharacterForm(client/C, form/F)
 			if(F.isComplete() && C)
 				var/char_name = F.getAnswer("name")
 				var/char_pass = F.getAnswer("password")
 				var/char_gender = F.getAnswer("gender")
-				del F
 
 				var/mob/M = new()
 				var/mob/Old = C.mob
@@ -94,9 +103,9 @@ _service/character_manager
 				if(Old) del Old
 				M.keywords = list(lowertext(M.name),"mobile","player")
 				M.Move(room_manager.GetRoom(1,1))
-				return M
-			else return C
-
+				return menuOps.MENU_EXIT
+			else return menuOps.MENU_REPEAT
+/*
 // Login menu and character creation/loading
 menu/login_menu/index
 	header = "What do you wish to do?"
@@ -123,3 +132,4 @@ item/login_menu
 			. += "Please bear with me, during this time :) I'll think of a more creative about text later.\n"
 			SendTxt(., C)
 			. = MENU_REPEAT
+*/

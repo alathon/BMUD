@@ -15,6 +15,8 @@ Use color_manager.Colorize(text, client_type) to recieve a returned, colorized s
 // HTML-specific constants
 #define EXPECT_CHAR 0
 #define EXPECT_CCODE 1
+#define CLIENT_TELNET 1
+#define CLIENT_DS 2
 #define TELNET_COLOR CLIENT_TELNET
 #define HTML_COLOR CLIENT_DS
 

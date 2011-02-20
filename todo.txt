@@ -1,4 +1,3 @@
-- Revamp character creation process. Its way too messy!
 - Add character saving/loading
 - Add room/zone saving/loading
 - OLC system?

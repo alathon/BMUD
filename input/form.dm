@@ -55,6 +55,19 @@ form
 		__state = formOps.STATE_READY
 
 	proc
+		copy()
+			var/form/F = new()
+			var/list/exclude = list("type", "parent_type", "tag", "vars")
+
+			for(var/a in F.vars)
+				if(a in exclude) continue
+				if(istype(src.vars[a],/list))
+					var/list/L = src.vars[a]
+					F.vars[a] = L.Copy()
+				else
+					F.vars[a] = src.vars[a]
+			return F
+
 		__allAnswered()
 			for(var/a = 1 to length(__answers))
 				var/idx = __answers[a]

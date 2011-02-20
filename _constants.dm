@@ -17,19 +17,6 @@ var
 		SERVICE_STARTUP = 1
 		SERVICE_RUNNING = 2
 
-		// Used by IO.Input()
-		ANSWER_TEXT = 1
-		ANSWER_NUM = 2
-		ANSWER_MOBREF = 3
-		ANSWER_OBJREF = 4
-		ANSWER_ROOMREF = 5
-		ANSWER_ZONEREF = 6
-		ANSWER_PLAYERREF = 7
-		ANSWER_NPCREF = 8
-		ANSWER_LIST_NUM = 9
-		ANSWER_LIST = 10
-		ANSWER_YESNO = 11
-
 		// Log-related bits.
 		// Syslog
 		EVENT_PROC = 1
@@ -41,7 +28,7 @@ var
 		EVENT_GENERAL  = 7
 
 		EVENT_CLIENTSEE = 8 // SendTxt() to client.
-		EVENT_CLIENTDO  = 9 // Input() to client
+		EVENT_CLIENTDO  = 9 // Input() to client. Not implemented yet.
 
 		// Used by connection handler
 		EVENT_CONNECTION_NEW = 10
@@ -70,16 +57,5 @@ var
 		ENDING_LOG = ".log"
 		ENDING_TRACE = ".trc"
 
-		// Used to determine client type
-		CLIENT_TELNET = 1
-		CLIENT_DS     = 2
-
-		// Used by menu.dm
-		MENU_BACK = "-1@@BACK@@-1"
-		MENU_REPEAT = "-1@@REPEAT@@-1"
-
 		// Used by the service manager.
 		FILE_SERVICE_INDEX = "./services.cfg"
-
-		// used by connection handler
-		MAX_LINKDEAD_TIME = 1200

@@ -33,13 +33,13 @@ client
 	LookInvalid(T)
 		SendTxt("You look around you, but can't seem to find [T].", src, 0)
 		return 1
-
+/*
 	proc/SetMenu(menu/M)
 		if(!M) return 0
 
 		current_menu = M
 		M.GetInput(src)
-
+*/
 client/New()
 	DetermineClientType()
 	while(!service_controller || !service_controller._running)

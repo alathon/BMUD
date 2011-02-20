@@ -48,7 +48,7 @@ Command/MUD
 		format = "'reboot'"
 		Process(mob/user)
 			..()
-			world.Reboot()
+			//world.Reboot()
 
 	Commands
 		format = "~'commands'"
