@@ -171,10 +171,6 @@ menu
 		setCallback(callWrapper/C)
 			if(istype(C)) __callback = C
 
-		compare(form/F, form/B)
-			for(var/a in F.vars)
-				world << "F: [F.vars[a]] B: [B.vars[a]]"
-	
 		ask(client/C)
 			__getReady(C)
 			if(!C) return
@@ -182,7 +178,6 @@ menu
 
 			if(istype(__form))
 				var/form/F = __form.copy()
-				compare(F,__form)
 
 				var/exit = F.begin(C)
 				return __formExitCode(C, F, exit)
