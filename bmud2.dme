@@ -27,7 +27,7 @@ FILE:
 // BEGIN_INCLUDE
 #include <abyssdragon\parser\Parser.dme>
 #include <alathon\services\services.dme>
-#include "/home/alathon/workspace/telnet_input/telnet_input.dme"
+#include <alathon\telnet_input\telnet_input.dme>
 #include "character_creation\char_manager.dm"
 #include "_constants.dm"
 #include "bits.dm"

@@ -1,2 +1,2 @@
 #!/bin/sh
-DreamDaemon bmud2.dmb 5555
+DreamDaemon bmud2.dmb 5555 -trusted

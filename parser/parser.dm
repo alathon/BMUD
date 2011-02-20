@@ -85,7 +85,6 @@ Parser/MUD
 				del temp
 				return X
 		if(!CheckMoveCommand(string, user))
-			world << "CheckMoveCommand failed"
 			Error(user, string, tokens)
 			del temp
 			return 0

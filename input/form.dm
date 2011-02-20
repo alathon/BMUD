@@ -57,7 +57,9 @@ form
 	proc
 		copy()
 			var/form/F = new()
-			var/list/exclude = list("type", "parent_type", "tag", "vars")
+			var/list/exclude = list("type",
+					"parent_type", "tag", "vars",
+					"__answers", "__questions")
 
 			for(var/a in F.vars)
 				if(a in exclude) continue
@@ -66,6 +68,11 @@ form
 					F.vars[a] = L.Copy()
 				else
 					F.vars[a] = src.vars[a]
+
+			for(var/a in __questions)
+				var/Input/idx = __questions[a]
+				F.addQuestion(a, idx.copy())
+
 			return F
 
 		__allAnswered()
@@ -108,6 +115,7 @@ form
 			if(!C) return
 
 			__state = formOps.STATE_WORKING
+
 			while(__state == formOps.STATE_WORKING)
 				if(!C)
 					__state = formOps.STATE_DONE
