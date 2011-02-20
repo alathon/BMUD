@@ -52,6 +52,12 @@ room
 		if(d in list("north","south","east","west"))
 			return src.vars[d]
 
+	proc/exits2list()
+		var/list/L = new()
+		for(var/a in list("north","south","east","west"))
+			if(istype(src.vars[a], /room)) L += a
+		return L
+
 	proc/exits2text()
 		. = ""
 		var/list/L = getExitNames()

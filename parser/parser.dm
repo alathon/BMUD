@@ -66,9 +66,9 @@ Parser/MUD
 	proc/CheckMoveCommand(T, mob/M)
 		if(M && M.loc && istype(M.loc, /room))
 			var/room/R = M.loc
-			var/list/Exits = R.exits2text()
+			var/list/Exits = R.exits2list()
 			for(var/Exit in Exits)
-				if(T == copytext(Exit, 1, length(T)+1))
+				if(inputOps.short2full(T,Exit,1))
 					M.Movement(Exit)
 					return 1
 		return 0
@@ -85,6 +85,7 @@ Parser/MUD
 				del temp
 				return X
 		if(!CheckMoveCommand(string, user))
+			world << "CheckMoveCommand failed"
 			Error(user, string, tokens)
 			del temp
 			return 0
