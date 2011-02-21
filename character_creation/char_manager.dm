@@ -49,6 +49,9 @@ _service/character_manager
 			showCharacterMenu(C)
 
 		showCharacterMenu(client/C)
+			world << "List of procedures:"
+			for(var/a in typesof(/client/proc)) world << "a = [a]"
+
 			var/menu/M = menuOps.getMenu("login")
 			M.ask(C)
 
