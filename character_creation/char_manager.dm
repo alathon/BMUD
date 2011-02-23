@@ -52,7 +52,7 @@ _service/character_manager
 			M.ask(C)
 
 		quitClient(client/C, menu/M)
-			SendTxt("Goodbye!", C)
+			sendTxt("Goodbye!", C)
 			del C
 			return menuOps.MENU_EXIT
 
@@ -77,7 +77,7 @@ _service/character_manager
 
 			I = new("\nWhat gender would you like to be? \[#zmale#y female#n\] (Hit enter for male)", inputOps.ANSWER_TYPE_LIST)
 			I.setAnswerlist(list("male","female"))
-			I.setDefault("male") // TODO:
+			I.setDefault("male")
 			F.addQuestion("gender", I)
 
 			I = new("\nPlease enter a password:",
@@ -130,6 +130,6 @@ item/login_menu
 			.  = "BMUD is currently in beta!\n"
 			. += "This means that there will be lots of bugs, missing features, et cetera.\n"
 			. += "Please bear with me, during this time :) I'll think of a more creative about text later.\n"
-			SendTxt(., C)
+			sendTxt(., C)
 			. = MENU_REPEAT
 */

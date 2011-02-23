@@ -32,21 +32,18 @@ Command/MUD/obj_manip
 		format = "'put'; num|!'all'; obj(contents, user); ?'in'|'into'; obj(contents, user)"
 		Process(mob/user, amount, obj/Put, obj/Container)
 			..()
-			world << "Putcontents"
 			user.Put(Put,Container,amount)
 
 		put_contents_2
 			category = ""
 			format = "'put'; obj(contents, user); ?'in'|?'into'; obj(contents, user)"
 			Process(mob/user, obj/Put, obj/Container)
-				world << "Putcontents2"
 				..(user, 1, Put, Container)
 
 		put_contents_3
 			category = ""
 			format = "'put'; 'all'|'everything'; ?'in'|?'into'; obj(contents, user)"
 			Process(mob/user, obj/Container)
-				world << "Putcontents3"
 				..(user, null, "all", Container)
 
 	put_ground
@@ -55,19 +52,16 @@ Command/MUD/obj_manip
 		format = "'put'; num|!'all'; obj(contents, user); ?'in'|'into'; obj(ground, user)"
 		Process(mob/user, amount, obj/Put, obj/Container)
 			..()
-			world << "Putground"
 			user.Put(Put,Container,amount)
 
 		put_ground_2
 			format = "'put'; obj(contents, user); ?'in'|?'into'; obj(ground, user)"
 			Process(mob/user, obj/Put, obj/Container)
-				world << "Putground2"
 				..(user, 1, Put, Container)
 
 		put_ground_3
 			format = "'put'; 'all'|'everything'; ?'in'|?'into'; obj(ground, user)"
 			Process(mob/user, obj/Container)
-				world << "Putground3"
 				..(user, null, "all", Container)
 
 	// get ?all|number OBJ ?from ?OBJ
@@ -78,26 +72,26 @@ Command/MUD/obj_manip
 			if(!obj_from) // get obj
 				if(cmptext(amount, "all")) // get all?
 					if(obj_get)
-						var/obj/F = MatchAtom(obj_get, user.contents + user.loc.contents, /obj)
+						var/obj/F = matchAtom(obj_get, user.contents + user.loc.contents, /obj)
 						if(F)
 							return user.Pickup("all", F, null)
 						else
-							SendTxt("Get all from what?", user, DT_MISC, 0)
+							sendTxt("Get all from what?", user, DT_MISC, 0)
 							return 0
 					else
-						SendTxt("You frantically attempt to pick up everything on the ground!", user, DT_MISC, 0)
+						sendTxt("You frantically attempt to pick up everything on the ground!", user, DT_MISC, 0)
 						return user.Pickup("all", user.loc, null)
 
-				var/obj/O = MatchAtom(obj_get, user.loc, /obj)
+				var/obj/O = matchAtom(obj_get, user.loc, /obj)
 				if(O) // Object found on ground.
 					user.Pickup(O,null,amount)
 				else
-					SendTxt("Couldn't find [obj_get]. Sorry!", user, DT_MISC, 0)
+					sendTxt("Couldn't find [obj_get]. Sorry!", user, DT_MISC, 0)
 
 			else
-				var/obj/From = MatchAtom(obj_from, user.contents + user.loc.contents, /obj)
+				var/obj/From = matchAtom(obj_from, user.contents + user.loc.contents, /obj)
 				if(!From)
-					SendTxt("Unable to find container: [obj_from]. Sorry!", user, DT_MISC, 0)
+					sendTxt("Unable to find container: [obj_from]. Sorry!", user, DT_MISC, 0)
 					return 0
 
 				if(cmptext(obj_get, "all"))
@@ -106,9 +100,9 @@ Command/MUD/obj_manip
 				else if(cmptext(amount, "all") && cmptext(obj_get, "from")) // get all from X?
 					return user.Pickup("all", From, null)
 
-				var/obj/Get = MatchAtom(obj_get, From, /obj)
+				var/obj/Get = matchAtom(obj_get, From, /obj)
 				if(!Get)
-					SendTxt("Couldn't find [obj_get] in [From.getName()]. Sorry!", user, DT_MISC, 0)
+					sendTxt("Couldn't find [obj_get] in [From.getName()]. Sorry!", user, DT_MISC, 0)
 					return 0
 
 				user.Pickup(Get,From,amount)
@@ -118,7 +112,7 @@ Command/MUD/obj_manip
 			format = "~'get'|~'grab'|~'fetch'; ?!anything; ?'from'; ?!anything"
 			Process(mob/user, obj_get, obj_from)
 				if(!obj_get)
-					SendTxt("Get what?", user, DT_MISC, 0)
+					sendTxt("Get what?", user, DT_MISC, 0)
 					return 0
 				if(cmptext(obj_get, "all"))
 					..(user, "all", obj_from, null)
@@ -138,7 +132,7 @@ Command/MUD/obj_manip
 			. = "You are carrying the following items:\n"
 			for(var/obj/O in user)
 				. += "[O.describeSelf(user)]\n"
-			SendTxt(., user, DT_MISC)
+			sendTxt(., user, DT_MISC)
 
 Command/MUD/error
 	priority = 0
@@ -146,27 +140,27 @@ Command/MUD/error
 	drop_error_1
 		format = "'drop'"
 		Process(mob/user)
-			SendTxt("Drop what?", user.client, DT_MISC, 0)
+			sendTxt("Drop what?", user.client, DT_MISC, 0)
 			return 0
 
 	put_error_1
 		format = "'put'; ?!obj(contents, user)|?!anything; ?'in'|?'into'; ?!anything"
 		Process(mob/user, obj/put, obj_into)
 			if(istext(put))
-				SendTxt("Put into what?", user.client, DT_MISC, 0)
+				sendTxt("Put into what?", user.client, DT_MISC, 0)
 				return 0
 			else
-				SendTxt("Put [put.getName()] into what?", user.client, DT_MISC, 0)
+				sendTxt("Put [put.getName()] into what?", user.client, DT_MISC, 0)
 				return 0
 
 	put_error_2
 		format = "'put'; num|!'all'; ?!obj(contents, user)|?!anything; ?'in'|?'into'; ?!anything"
 		Process(mob/user, obj/put, obj_into)
 			if(istext(put))
-				SendTxt("Put into what?", user.client, DT_MISC, 0)
+				sendTxt("Put into what?", user.client, DT_MISC, 0)
 				return 0
 			else
-				SendTxt("Put [put.getName()] into what?", user.client, DT_MISC, 0)
+				sendTxt("Put [put.getName()] into what?", user.client, DT_MISC, 0)
 				return 0
 
 

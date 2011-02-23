@@ -6,7 +6,7 @@ mob/proc
 			src.Move(N)
 		else
 			if(client)
-				SendTxt("You can't move there.", src, DT_MISC, 0)
+				sendTxt("You can't move there.", src, DT_MISC, 0)
 
 /*
 Command/MUD/movement

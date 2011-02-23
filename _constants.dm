@@ -27,7 +27,7 @@ var
 		EVENT_SYSINFO  = 6
 		EVENT_GENERAL  = 7
 
-		EVENT_CLIENTSEE = 8 // SendTxt() to client.
+		EVENT_CLIENTSEE = 8 // sendTxt() to client.
 		EVENT_CLIENTDO  = 9 // Input() to client. Not implemented yet.
 
 		// Used by connection handler

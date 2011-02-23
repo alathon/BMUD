@@ -66,7 +66,7 @@ Parser/MUD
 	proc/CheckMoveCommand(T, mob/M)
 		if(M && M.loc && istype(M.loc, /room))
 			var/room/R = M.loc
-			var/list/Exits = R.exits2list()
+			var/list/Exits = R.getExits()
 			for(var/Exit in Exits)
 				if(inputOps.short2full(T,Exit,1))
 					M.Movement(Exit)
@@ -90,7 +90,7 @@ Parser/MUD
 			return 0
 
 	Error(user, string, tokens)
-		SendTxt("I don't understand what you mean with [string].\n", user, DT_MISC, 0)
+		sendTxt("I don't understand what you mean with [string].\n", user, DT_MISC, 0)
 		return 1
 
 var/Parser/MUD/parser

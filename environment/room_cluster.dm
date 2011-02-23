@@ -7,7 +7,7 @@ bmud2\environment\room_cluster.dm
 A room cluster is a collection (or cluster) of rooms, grouped under a common name and description.
 This is what most MUDs would refer to as a 'zone', or an 'area'.
 */
-room_cluster
+roomCluster
 	var
 		list
 			rooms

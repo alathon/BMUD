@@ -1,3 +1,2 @@
-- Add character saving/loading
-- Add room/zone saving/loading
-- OLC system?
+- Figure out whether trace.dm is going to be of any use, or whether
+  to just throw it out the window.

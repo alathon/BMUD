@@ -24,22 +24,20 @@ Command/MUD
 		format = "'quit'|'exit'"
 		Process(mob/user)
 			..()
-			SendTxt("Bye!", user, DT_MISC, 0)
-			SendTxt("TODO: Implement logging out")
-			//if(user.client)
-			//	user.client.Logout()
+			sendTxt("Bye!", user, DT_MISC, 0)
+			// TODO: Implement logging out
 
 	Who
 		format = "~'who'"
 		Process(mob/user)
 			..()
 			var/list/players=connection_manager.getOnlinePlayers()
-			SendTxt("The following players are online ([length(players)]):", user, DT_MISC, 0)
+			sendTxt("The following players are online ([length(players)]):", user, DT_MISC, 0)
 			for(var/mob/M in players)
-				SendTxt(M.getName(), user, DT_MISC, 0)
+				sendTxt(M.getName(), user, DT_MISC, 0)
 
 	Look
-		format = "~'look'; ?'at'; obj(contents, user)|obj(ground, user)|mob(ground, user)"
+		format = "~'look'|~'glance'; ?'at'; obj(contents, user)|obj(ground, user)|mob(ground, user)"
 		Process(mob/user, obj/O)
 			..()
 			user.Look(O)
@@ -54,7 +52,7 @@ Command/MUD
 		format = "~'commands'"
 		Process(mob/user)
 			..()
-			SendTxt("The following commands are available to you:", user, DT_MISC, 0)
+			sendTxt("The following commands are available to you:", user, DT_MISC, 0)
 			var/list/categories = list()
 			for(var/Command/C in parser.Commands)
 				if(C.Allow(user) && C.category && C.true_name)
@@ -66,13 +64,13 @@ Command/MUD
 			for(var/a in categories)
 				var/list/L = categories[a]
 				var/word_wrap = 50
-				. += "\n\[0m[Center("\[[a]\]", "-", 65)]\n"
+				. += "\n\[0m[centerText("\[[a]\]", "-", 65)]\n"
 				for(var/b in L)
 					word_wrap -= length(b)
 					if(word_wrap < 0)
 						word_wrap = 50
 						. += "\n"
 					. += "[b] "
-			SendTxt(., user, DT_MISC, 0)
-			//SendTxt("Type help \<command name\> for more information on a command.", user, DT_MISC, 1)
+			sendTxt(., user, DT_MISC, 0)
+			//sendTxt("Type help \<command name\> for more information on a command.", user, DT_MISC, 1)
 

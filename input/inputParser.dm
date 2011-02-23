@@ -20,7 +20,7 @@ Input
 
 inputFormatter
 	send(txt,trg)
-		SendTxt(txt, trg)
+		sendTxt(txt, trg)
 
 inputOptions
 	var

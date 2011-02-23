@@ -3,21 +3,21 @@ atom
 		var/size = 1
 
 	var
-		list/keywords
+		list/keywords // TODO: Replace with textMatcher datum
 
 	proc
-		Keywords()
+		keywords()
 		getName()
-		GetDesc()
+		getDesc()
 		describeSelf()
 
 	getName()
 		return "\a [src][suffix]"
 
-	GetDesc()
+	getDesc()
 		return desc
 
-	Keywords()
+	keywords()
 		return keywords
 
 atom/ParseMatch(Name, multi = 1, ignorecase = 1)
@@ -42,7 +42,7 @@ atom/ParseMatch(Name, multi = 1, ignorecase = 1)
 	else
 		var/found_it = FALSE
 		for(var/Example in match)
-			if(Short2Full(Name, Example, ignorecase))
+			if(inputOps.short2full(Name, Example, ignorecase))
 				found_it = TRUE
 		if(!found_it)
 			return FALSE

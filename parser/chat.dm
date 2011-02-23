@@ -15,16 +15,16 @@ Command/MUD/Chat
 			T = html_encode(T)
 
 			if(target == src)
-				SendTxt("Getting lonely, are we?", user, DT_MISC, 0)
+				sendTxt("Getting lonely, are we?", user, DT_MISC, 0)
 				return 1
 
 			if(!T || T == " ")
-				SendTxt("Tell [target.getName()] what?", user, DT_MISC, 0)
+				sendTxt("Tell [target.getName()] what?", user, DT_MISC, 0)
 				return 1
 
 
-			SendTxt("You tell [target.getName()], '[T]'", user, DT_PRIV)
-			SendTxt("[user.getName()] tells you, '[T]'", target, DT_PRIV)
+			sendTxt("You tell [target.getName()], '[T]'", user, DT_PRIV)
+			sendTxt("[user.getName()] tells you, '[T]'", target, DT_PRIV)
 			Log("[user.getName()] tells [target.getName()], '[T]'", EVENT_CHAT)
 			return 1
 
@@ -32,7 +32,7 @@ Command/MUD/Chat
 			category = ""
 			format = "~'tell'|~'whisper'; anything"
 			Process(mob/user, T)
-				SendTxt("Cannot find [copytext(T,1,findtext(T," "))]. See help tell for more information.\n", user, DT_MISC, 0)
+				sendTxt("Cannot find [copytext(T,1,findtext(T," "))]. See help tell for more information.\n", user, DT_MISC, 0)
 				return 1
 
 	Say
@@ -41,12 +41,12 @@ Command/MUD/Chat
 			..()
 			T = html_encode(T)
 			if(!T || T == " ")
-				SendTxt("Say what?", user, DT_MISC, 0)
+				sendTxt("Say what?", user, DT_MISC, 0)
 				return 1
 
 			if(user.loc)
 				for(var/mob/M in user.loc.contents - user)
-					SendTxt("[user.getName()] says, '[T]'#n", M, DT_MISC)
-				SendTxt("You say, '[T]'#n", user, DT_MISC)
+					sendTxt("[user.getName()] says, '[T]'#n", M, DT_MISC)
+				sendTxt("You say, '[T]'#n", user, DT_MISC)
 				Log("[user.getName()] says, '[T]'", EVENT_CHAT)
 				return 1

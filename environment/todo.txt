@@ -1,0 +1,14 @@
+Redesign room_manager.dm, room_cluster.dm:
+
+- Switch away from uppercase first-letter procedure names
+- Clarify the role of the room_manager (Which should be named
+  roomManager)
+- Hide private functions behind __ prefix
+- Don't allow the creation of unnamed rooms/clusters, or at least
+  mark them as invalid
+- Build up skeleton for OLC to be implemented on top of.
+
+On OLC:
+
+- Abstract away saving/loading so you can use savefiles OR MySQL DB
+  depending on what you want.

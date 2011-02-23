@@ -16,17 +16,16 @@ room
 		room/east
 		room/west
 
-
 	proc
 		enterMessage(atom/A)
 			if(ismob(A))
 				var/mob/M = A
-				SendTxt("\a [M.getName()] enters", contents, DT_MISC)
+				sendTxt("\a [M.getName()] enters", contents, DT_MISC)
 
 		exitMessage(atom/A)
 			if(ismob(A))
 				var/mob/M = A
-				SendTxt("\a [M.getName()] leaves[M.direction? " [M.direction]":""]", contents, DT_MISC)
+				sendTxt("\a [M.getName()] leaves[M.direction? " [M.direction]":""]", contents, DT_MISC)
 
 
 	Exit(atom/A) // A attempting to exit src.
@@ -41,7 +40,7 @@ room
 			var/mob/M = A
 			M.direction = ""
 			if(M.client)
-				SendTxt(describeSelf(M), M, DT_MISC)
+				sendTxt(describeSelf(M), M, DT_MISC)
 		return 1
 
 	Exited(atom/movable/O)
@@ -51,12 +50,6 @@ room
 	proc/hasExit(d)
 		if(d in list("north","south","east","west"))
 			return src.vars[d]
-
-	proc/exits2list()
-		var/list/L = new()
-		for(var/a in list("north","south","east","west"))
-			if(istype(src.vars[a], /room)) L += a
-		return L
 
 	proc/exits2text()
 		. = ""
@@ -99,7 +92,7 @@ room
 		. = ""
 		. += "\n\[[src.getName()]\]"
 		. += "\n"
-		. += "[src.GetDesc()]\n"
+		. += "[src.getDesc()]\n"
 
 		// Room Exits
 		. += "Obvious exits: [src.exits2text()]"
@@ -108,10 +101,10 @@ room
 		if(length(contents))
 			. += "\n\n"
 			for(var/mob/m in contents)
-				if(M == m || !M.CanSee(m)) continue
+				if(M == m || !M.canSee(m)) continue
 				. += "[m.describeSelf(src)]\n"
 			for(var/obj/O in contents)
-				if(!M.CanSee(O)) continue
+				if(!M.canSee(O)) continue
 				. += "[O.describeSelf(src)]\n"
 			. = copytext(.,1,length(.)) // Cut the last \n
 

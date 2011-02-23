@@ -9,7 +9,7 @@ have participants, which can choose to filter out certain message types based on
 */
 
 atom
-	RecieveText(T, data_type, colorize = 0)
+	recieveText(T, data_type, colorize = 0)
 		if(tracer) tracer.Input(T, data_type)
 		return T
 
@@ -92,6 +92,6 @@ trace
 		if(participants)
 			for(var/client/C in participants)
 				if(is_set(dt, C.trace_exclude)) continue
-				SendTxt(txt, C, 0)
+				sendTxt(txt, C, 0)
 
 client/var/trace_exclude = 0 // Exclude nothing by default

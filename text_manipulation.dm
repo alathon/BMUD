@@ -7,7 +7,7 @@ bmud2\core\text_manipulation.dm
 Text manipulation procedures, and related.
 */
 // Thanks to Dan for the next two procedures. They should be self-explanatory in use and function
-proc/Text2List(txt,delim)
+proc/text2list(txt,delim)
 	var
 		start = 1
 		end = findtext(txt, delim)
@@ -20,31 +20,14 @@ proc/Text2List(txt,delim)
 	lst += copytext(txt,start)
 	return lst
 
-proc/List2Text(lst[],delim)
+proc/list2text(lst[],delim)
 	var/i
 	if(!istype(lst,/list)) return lst
 	for(i=1, i<=lst.len, i++)
 		. = "[ . ][ lst[i] ][ (i+1>lst.len) ? "" : delim]"
 
-/* Phased out: Was used by environment/turf.dm
-
-var/list/directions = list("[NORTH]" = "north", "[SOUTH]" = "south",
-								"[EAST]" = "east", "[WEST]" = "west",
-								"[NORTHEAST]" = "northeast", "[NORTHWEST]" = "northwest",
-								"[SOUTHEAST]" = "southeast", "[SOUTHWEST]" = "southwest")
-*/
-
 proc
-	all_whitespace(text)
-		. = Text2List(text, " ")
-		return length(.) == length(text)
-
-	// Clears any delim in front of text. If both_sides, clears back too.
-	clear(text, delim, both_sides=0)
-		// TODO
-		. = text
-proc
-	TranslateTokens(T,mob/M) // Translates tokens according to values of M
+	translateTokens(T,mob/M) // Translates tokens according to values of M
 		if(!M) return T
 
 		. = T
@@ -76,7 +59,7 @@ proc
 	// Checks for following syntax:
 	// X.item
 	// 1st item
-	ScanNum(string)
+	scanNum(string)
 		// Chop off number portion
 		. = ""
 		var/c = text2num(copytext(string, 1, 2))
@@ -99,12 +82,12 @@ proc
 			return 0
 
 	// "lite" version of above. Only checks for X.item
-	Scannum(string)
+	scannum(string)
 		var/p = findtext(string, ".")
 		if(!p) return -1
 		return text2num(copytext(string,1,p)) - 1
 
-	Fill(txt,char,l)
+	fillText(txt,char,l)
 		if(isnum(txt)) txt = "[txt]"
 
 		var/L = length(txt)
@@ -119,11 +102,11 @@ proc
 			for(init=1, init <= diff, init++)
 				. += char
 
-	MatchAtom(string, atom/from, type_specific)
+	matchAtom(string, atom/from, type_specific)
 		if(!string || !from) return 0
 
 		var/list/L
-		var/list/scan = ScanNum(string)
+		var/list/scan = scanNum(string)
 		var/num		  = 0
 		if(istype(scan, /list))
 			num = scan[1]
@@ -145,7 +128,7 @@ proc
 				return A
 		return null
 
-	Center(txt, char, l)
+	centerText(txt, char, l)
 		if(isnum(txt)) txt = "[txt]"
 		var
 			txt_len = length(txt)
@@ -166,11 +149,3 @@ proc
 		for(var/i = 1, i<= delta_txt, i++)
 			padding += "[char]"
 		. = "[padding][.][padding]"
-
-	Short2Full(short, full, ignorecase = 1)
-		if(!short) return 0
-
-		if(ignorecase)
-			return (cmptext(short, copytext(full, 1, length(short)+1)))
-		else
-			return (cmptextEx(short, copytext(full, 1, length(short)+1)))

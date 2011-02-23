@@ -86,7 +86,7 @@ _service/log_manager
 		if(!logs) logs = new()
 		logs += lname
 		logs[lname] = L
-		Input("Adding log for event types: [List2Text(L.log_list, ",")] ([L.name])", EVENT_PROC)
+		Input("Adding log for event types: [list2text(L.log_list, ",")] ([L.name])", EVENT_PROC)
 		return L
 
 	RemLog(lname)
@@ -159,7 +159,7 @@ _service/log_analyst
 		WhatsAlive()
 
 	WhatsAlive()
-		var/list/creations = Text2List(file2text(DIR_LOGS + "creation" + ENDING_LOG), "\n")
+		var/list/creations = text2list(file2text(DIR_LOGS + "creation" + ENDING_LOG), "\n")
 
 		var/list/return_list = list("created", "deleted")
 

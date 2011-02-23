@@ -18,13 +18,14 @@ obj
 /*
 Stacking rules and pluralization, allowing objs to be containers and defining a universal 'size' unit for all atoms.
 */
+// TODO: This list shouldn't be global. Namespace pollution.
 var
 	list
 		built_in = list("_key", "vars", "__count", "name", "suffix", "x", "y", "z", "pixel_x", "pixel_y", "loc", \
 				"overlays", "underlays", "verbs", "contents", "gender")
 
 proc
-	TextPlural(__base_name)
+	textPlural(__base_name)
 		. = __base_name
 		var/l = length(.)
 		if(l < 2) return . + "'s"
@@ -111,7 +112,7 @@ obj
 		else if(__count > 1)
 			gender = "plural"
 			suffix = " (x[__count])"
-			if(!__base_plural) __base_plural = TextPlural(__base_name)
+			if(!__base_plural) __base_plural = textPlural(__base_name)
 			name = __base_plural
 		else
 			suffix = ""
@@ -119,19 +120,7 @@ obj
 			gender = "neuter"
 
 	pluralize(n = __count)
-		return (__count && n != 1) ? TextPlural(__base_name) : __base_name
-
-	__setCount(amt)
-		__count = amt
-		update()
-
-	__addCount(amt)
-		__count += amt
-		update()
-
-	__remCount(amt)
-		__count -= amt
-		update()
+		return (__count && n != 1) ? textPlural(__base_name) : __base_name
 
 	Move(atom/dest)
 		if(!dest) return // Don't allow moves into null.
@@ -140,24 +129,6 @@ obj
 		if(!.) return
 
 		__checkContainer()
-
-
-	__checkContainer()
-		if(!loc) return // We're nowhere, so nothing to check.
-
-		if(__maxCount) // Stackable object.
-			for(var/obj/O in loc)
-				if(O != src && O.match(src))
-					var/can_hold = O.__maxCount - O.__count
-					if(!can_hold) continue
-
-					var/to_add = (can_hold >= src.__count) ? src.__count : can_hold
-					O.__addCount(to_add)
-					src.__remCount(to_add)
-					continue
-		if(isobj(loc))
-			var/obj/O = loc
-			O.update()
 
 	match(obj/O)
 		if(!O || !__maxCount || !O.__maxCount || O.type != src.type) return 0
@@ -172,7 +143,6 @@ obj
 						return 0
 			else
 				if(vars[V] != O.vars[V])
-					world << "match([src],[O]) failed on [V]"
 					return 0
 		return 1
 
@@ -192,3 +162,34 @@ obj
 					O.vars[V] = vars[V]
 		O.__setCount(n)
 		return O
+
+	__setCount(amt)
+		__count = amt
+		update()
+
+	__addCount(amt)
+		__count += amt
+		update()
+
+	__remCount(amt)
+		__count -= amt
+		update()
+
+
+	__checkContainer()
+		if(!loc) return // We're nowhere, so nothing to check.
+
+		if(__maxCount) // Stackable object.
+			for(var/obj/O in loc)
+				if(O != src && O.match(src))
+					var/can_hold = O.__maxCount - O.__count
+					if(!can_hold) continue
+
+					var/to_add = (can_hold >= src.__count) ? src.__count : can_hold
+					O.__addCount(to_add)
+					src.__remCount(to_add)
+					continue
+		if(isobj(loc))
+			var/obj/O = loc
+			O.update()
+

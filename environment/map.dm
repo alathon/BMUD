@@ -56,60 +56,10 @@ mob/proc
 			else
 				. += "[T.desc]\n[T.DescribeExits(src)][T.DescribeContents(src)]"
 
-			SendTxt(., src, DT_MISC, 0)
+			sendTxt(., src, DT_MISC, 0)
 
 		else
 			var/turf/T = loc
 			. += (color_manager) ? color_manager.Colorize("[T.desc]\n[T.DescribeExits(src)][T.DescribeContents(src)]", CLIENT_DS) : \
 									"[T.desc]\n[T.DescribeExits(src)][T.DescribeContents(src)]"
-			SendTxt(., src, DT_MISC, 0)
-
-
-/*
-	Worldmap(size, _x, _y, _z)
-		var
-			upper_x = _x + size
-			upper_y = _y + size
-			count   = 0
-			map_len = (size*2) + 1
-			map[map_len]
-
-		for(var/y = _y - size, y <= upper_y, y++)
-			count++
-			for(var/x = _x - size, x <= upper_x, x++)
-				if(x == _x && y == _y)
-					map[(map_len+1) - count] += "\[1;31;41m[world_map.map[x][y][_z]]"
-				else
-					map[(map_len+1) - count] += world_map.map[x][y][_z]
-		return map
-
-var/world_map/world_map
-world_map
-	var/list/map[100][100][5]
-
-	New()
-		..()
-		// Pad map.
-		for(var/x = 1, x <= 100, x++)
-			for(var/y = 1, y <= 100, y++)
-				for(var/z = 1, z <= 5, z++)
-					map[x][y][z] = "\[34;44m~"
-
-	proc
-		AddChunk(_x, _y, _z, T)
-			map[_x][_y][_z] = T
-
-		ClearChunk(_x, _y, _z)
-			map[_x][_y][_z] = " "
-
-		GetText(_x, _y, _z)
-			return map[_x][_y][_z]
-
-		GetSegment(x1,y1,x2,y2,z)
-			var/list_len = y2 - y1 + 1 // 12
-			var/initial_y = y1 // 10
-			var/list/L[list_len]
-			for(var/y = y1, y <= y2, y++)
-				for(var/x = x1, x <= x2, x++)
-					L[list_len - (y - initial_y)] += map[x][y][z]
-			return L*/
+			sendTxt(., src, DT_MISC, 0)

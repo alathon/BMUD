@@ -14,6 +14,7 @@ datum
 			 // UIDs are contextual according to the type of datum you're referring to. There may be a mob with the same UID
 			 // as an obj; however, they are differentiated by their type. You can create several instances of a datum with the
 			 // same UID. To differentiate those uniquely, use the \ref of an obj.
+			 // TODO: Rename to __uid, and make sure we actually want this at a datum-level ??? Doesn't seem like it.
 
 datum/New(fake = 0)
 	if(!fake)

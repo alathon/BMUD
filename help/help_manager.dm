@@ -72,7 +72,7 @@ _service/help_manager
 		if(!fexists(f)) return 0
 
 		var
-			list/txt = Text2List(file2text(f), "\n")
+			list/txt = text2list(file2text(f), "\n")
 			_name = ""
 			list/_keywords
 			list/_similar
@@ -84,11 +84,11 @@ _service/help_manager
 				if(1) // name
 					_name = txt[l]
 				if(2)
-					_keywords = Text2List(txt[l], " ")
+					_keywords = text2list(txt[l], " ")
 				if(3)
-					_similar = Text2List(txt[l], " ")
+					_similar = text2list(txt[l], " ")
 				if(4)
-					_colors = Text2List(txt[l], " ")
+					_colors = text2list(txt[l], " ")
 				else
 					_body += "[txt[l]]\n"
 

@@ -31,7 +31,7 @@ _service/room_manager
 
 	Loaded()
 		if(!room_manager) room_manager = src
-		var/room_cluster/C = CreateCluster("Test Cluster", "This is the test cluster")
+		var/roomCluster/C = CreateCluster("Test Cluster", "This is the test cluster")
 		AddCluster(C)
 		var/room/one = C.CreateRoom("Test One", "Test One Description")
 		var/room/two = C.CreateRoom("Test Two", "Test Two Description")
@@ -54,31 +54,31 @@ _service/room_manager
 
 	GetRoom(...)
 		if(length(args) < 2) return 0
-		var/room_cluster/C = (isnum(args[1])) ? GetCluster(args[1]) : GetClusterByName(args[1])
+		var/roomCluster/C = (isnum(args[1])) ? GetCluster(args[1]) : GetClusterByName(args[1])
 		if(!C) return 0
 		return C.GetRoom(args[2])
 
 	GetObj(...)
 		if(length(args) < 2) return 0
-		var/room_cluster/C = GetCluster(args[1])
+		var/roomCluster/C = GetCluster(args[1])
 		if(!C) return 0
 		return C.GetObj(args[2])
 
 	GetMob(...)
 		if(length(args) < 2) return 0
-		var/room_cluster/C = GetCluster(args[1])
+		var/roomCluster/C = GetCluster(args[1])
 		if(!C) return 0
 		return C.GetMob(args[2])
 
 	CreateCluster(n, d)
-		var/room_cluster/C = new()
+		var/roomCluster/C = new()
 		C.name = n
 		C.desc = d
 		if(!AddCluster(C)) del C
 		return (C || null)
 
 	GetClusterByName(_name)
-		for(var/room_cluster/C in clusters)
+		for(var/roomCluster/C in clusters)
 			if(cmptext(C.name, _name)) return C
 		return null
 
@@ -86,8 +86,8 @@ _service/room_manager
 		if(!isnum(uid) || uid < 1 || uid > length(clusters)) return 0
 		return clusters[uid]
 
-	AddCluster(room_cluster/c)
-		if(!c || !istype(c, /room_cluster)) return 0
+	AddCluster(roomCluster/c)
+		if(!c || !istype(c, /roomCluster)) return 0
 		if(!clusters) clusters = new()
 		if(c in clusters) return 0
 
@@ -96,9 +96,9 @@ _service/room_manager
 		c._uid = new_len
 		return c
 
-	RemCluster(room_cluster/C)
+	RemCluster(roomCluster/C)
 		if(isnum(C)) C = GetCluster(C)
-		if(!istype(C,/room_cluster)) return 0
+		if(!istype(C,/roomCluster)) return 0
 
 		C.RemoveSelf()
 		if(C._uid == length(clusters))
