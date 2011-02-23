@@ -28,14 +28,12 @@ _service/character_manager
 
 	proc
 		__createLoginMenu()
-			var/menu/root = new()
-			var/menu/create = new("create",
-					"(#rC#n)reate a new character")
-			create.setForm(characterForm(),
-					new/callWrapper(src,"parseCharacterForm"))
-
-			var/menu/quit = new("quit", "(#bQ#n)uit the game")
-			quit.setCallback(new/callWrapper(src,"quitClient"))
+			var/menuAction/root = new(new/menu)
+			var/menuAction/create = new(characterForm())
+			var/menuAction/quit = new(new/menu("quit",
+						"(#bQ#n)uit the game"))
+			create.setCallback(new/callObject(src,"parseCharacterForm"))
+			quit.setCallback(new/callObject(src,"quitClient"))
 			root.attach(create, quit)
 			menuOps.addMenu(root, "login")
 
@@ -49,8 +47,6 @@ _service/character_manager
 			showCharacterMenu(C)
 
 		showCharacterMenu(client/C)
-			world << "List of procedures:"
-			for(var/a in typesof(/client/proc)) world << "a = [a]"
 
 			var/menu/M = menuOps.getMenu("login")
 			M.ask(C)
@@ -71,7 +67,7 @@ _service/character_manager
 				return new/inputError("Password must be at least 7 characters.")
 
 		characterForm()
-			var/form/F = new()
+			var/form/menu/F = new("create", "(#zC#n)reate a character")
 			var/Input/I
 
 			I = new("\nWhat is your name? (Type #zexit#n to quit)",
@@ -89,6 +85,7 @@ _service/character_manager
 			I.setConfirm("Please type it again:")
 			I.setCallback(src, "__verify_password")
 			F.addQuestion("password", I)
+
 			return F
 
 		parseCharacterForm(client/C, form/F)

@@ -53,6 +53,8 @@ FILE:
 #include "input\menu.dm"
 #include "input\form.dm"
 #include "input\inputParser.dm"
+#include "input\menuOptions.dm"
+#include "input\menuAction.dm"
 #include "objects\mob.dm"
 #include "objects\obj.dm"
 #include "objects\atom.dm"
