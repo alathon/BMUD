@@ -5,7 +5,7 @@ __updateKeywords() in those cases. */
 
 atom
 	var
-		textMatcher/__keywords=new()
+		tmp/textMatcher/__keywords=new()
 
 	proc/__updateKeywords()
 		__keywords.setKeywords(list(name))

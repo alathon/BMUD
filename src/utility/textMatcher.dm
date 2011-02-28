@@ -15,10 +15,9 @@ textMatcher
 			__partial = n
 
 		setKeywords(list/L)
+			if(!istype(L, /list)) L = args
 			if(istype(L, /list))
 				__keywords = L
-			else if(istext(L))
-				for(var/a in args) __keywords += a
 
 		match(text, ignoreCase = __ignoreCase, partial = __partial)
 			for(var/a in __keywords)

@@ -43,7 +43,6 @@ _service/room_manager
 		O.__maxCount = 5
 		O.__count = 5
 		O.__base_name = "rose"
-		O.__keywords = list("rose")
 		O.update()
 		O.Move(one)
 		..()

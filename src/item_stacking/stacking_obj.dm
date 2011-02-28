@@ -104,6 +104,7 @@ obj
 			setName(__base_name)
 			gender = "neuter"
 
+
 	proc/pluralize(n = __count)
 		return (__count && n != 1) ? textPlural(__base_name) : __base_name
 
@@ -119,6 +120,8 @@ obj
 				for(var/a in L)
 					if(L[a] != OL[a])
 						return 0
+			else if(!issaved(vars[V]))
+				continue
 			else
 				if(vars[V] != O.vars[V])
 					return 0
@@ -133,7 +136,8 @@ obj
 		for(var/V in vars)
 			if(vars[V] != initial(vars[V]))
 				if(V in built_in) continue
-				if(issaved(V) && istype(vars[V], /list))
+				if(!issaved(vars[V])) continue
+				if(istype(vars[V], /list))
 					var/list/L = vars[V]
 					O.vars[V] = L.Copy()
 				else

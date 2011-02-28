@@ -106,5 +106,4 @@ _service/parser
 atom/ParseMatch(Name, multi = 1, ignorecase = 1)
 	if(!Name) return 0
 	if(!__keywords) return 0
-
 	return __keywords.match(Name, ignorecase, multi)
