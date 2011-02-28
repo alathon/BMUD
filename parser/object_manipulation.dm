@@ -131,7 +131,7 @@ Command/MUD/obj_manip
 			..()
 			. = "You are carrying the following items:\n"
 			for(var/obj/O in user)
-				. += "[O.describeSelf(user)]\n"
+				. += "[O.describeTo(user)]\n"
 			sendTxt(., user, DT_MISC)
 
 Command/MUD/error

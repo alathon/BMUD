@@ -6,6 +6,7 @@ bmud2\core\text_manipulation.dm
 
 Text manipulation procedures, and related.
 */
+
 // Thanks to Dan for the next two procedures. They should be self-explanatory in use and function
 proc/text2list(txt,delim)
 	var

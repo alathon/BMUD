@@ -1,0 +1,18 @@
+Variable scope:
+
+- Private variables and functions should be prefixed by __
+
+Folder/file structure:
+
+- The following folders exist for code:
+	- environment: Code related to the physical environment, such as
+	rooms, zones and similar
+	- character_creation: Code related to the creation of characters
+	- parser: Commands and parser-specific code
+	- input: Code related to recieving and outputting to the user
+
+If something doesn't fit into a folder, there are two options:
+
+1) Put it in the base directory, alongside the .dme
+2) Create a new folder for the file. This should only happen if more
+than one file can be in the folder.

@@ -7,6 +7,20 @@ bmud2\core\parser\general.dm
 General, all purpose commands.
 */
 
+// Used by Command/MUD/Look
+mob/proc/lookAt(atom/a)
+	if(!client) return
+	if(!a)
+		if(istype(loc, /room))
+			var/room/R = loc
+			sendTxt(R.describeTo(src), src)
+		else
+			sendTxt("Unidentified location. Please report.", src, 0)
+			return
+	else
+		if(istype(a, /atom))
+			sendTxt(a.describeTo(src), src)
+
 Command
 	New() //Set true_name, the first keyword encased in 's in the format string.
 		  // Used by the commands command.
@@ -40,7 +54,7 @@ Command/MUD
 		format = "~'look'|~'glance'; ?'at'; obj(contents, user)|obj(ground, user)|mob(ground, user)"
 		Process(mob/user, obj/O)
 			..()
-			user.Look(O)
+			user.lookAt(O)
 
 	Reboot
 		format = "'reboot'"

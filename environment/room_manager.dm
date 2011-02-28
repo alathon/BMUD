@@ -43,7 +43,7 @@ _service/room_manager
 		O.__maxCount = 5
 		O.__count = 5
 		O.__base_name = "rose"
-		O.keywords = list("rose")
+		O.__keywords = list("rose")
 		O.update()
 		O.Move(one)
 		..()
@@ -93,7 +93,7 @@ _service/room_manager
 
 		var/new_len = ++clusters.len
 		clusters[new_len] = c
-		c._uid = new_len
+		c.__uid = new_len
 		return c
 
 	RemCluster(roomCluster/C)
@@ -101,8 +101,8 @@ _service/room_manager
 		if(!istype(C,/roomCluster)) return 0
 
 		C.RemoveSelf()
-		if(C._uid == length(clusters))
+		if(C.__uid == length(clusters))
 			clusters.len--
 		else
-			clusters.Cut(C._uid, C._uid+1)
+			clusters.Cut(C.__uid, C.__uid+1)
 		return clusters.len

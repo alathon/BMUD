@@ -1,6 +1,12 @@
 menuOptions
 	proc
-		menuAnswer(menuAction/A, i)
+		menuAnswer(a, i)
+			var/menuAction/A
+			if(!istype(a, /menuAction))
+				A = new/menuAction(A)
+			else
+				A = a
+
 			if(istype(i, /menuAction))
 				var/menuAction/M = i
 				return M
@@ -22,7 +28,7 @@ menuOptions
 		getSubmenu(main, sub)
 			if(main in predefined)
 				var/menuAction/M = predefined[main]
-				return M.findMenu(sub)
+				return M.findMenuAction(sub)
 
 		addMenu(menuAction/M, key)
 			predefined += key

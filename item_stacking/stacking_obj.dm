@@ -1,24 +1,9 @@
-obj
-	getName()
-		return "\an [src]"
-
-	describeSelf(atom/A)
-		if(!A) return 0
-
-		if(istype(A, /turf) || istype(A, /room))
-			if(__count > 1)
-				return "[getName()] lie here[suffix]"
-			else
-				return "[getName()] lies here"
-		else if(istype(A, /mob))
-			return "[getName()][suffix]"
-		else
-			return "Not implemented yet!"
-
 /*
 Stacking rules and pluralization, allowing objs to be containers and defining a universal 'size' unit for all atoms.
 */
 // TODO: This list shouldn't be global. Namespace pollution.
+
+
 var
 	list
 		built_in = list("_key", "vars", "__count", "name", "suffix", "x", "y", "z", "pixel_x", "pixel_y", "loc", \
@@ -49,30 +34,19 @@ proc
 				return . + "es"
 		return . + "s"
 
+// Mobs/objs have a size, since objs can contain mobs and vice versa.
+atom/movable/var/size=1
+
 obj
-	gender = "neuter"
+	gender="neuter"
 
 	var
-		__contains = 0
-		__canContain = 0 // > 0 to make container.
+		__contains=0
+		__canContain=0
 		__base_name = ""
 		__base_plural = ""
-		__count = 1
-		__maxCount = 0 // 0 = not stackable
-
-	proc
-		__setCount()
-		__addCount()
-		__remCount()
-		update()
-		split(n)
-		pluralize()
-		match(obj/O)
-		canContain()
-		getPlural()
-		getCount()
-		getContainTotal()
-		__checkContainer()
+		__count=1
+		__maxCount=0
 
 	New()
 		..()
@@ -88,22 +62,30 @@ obj
 		update()
 		return 1
 
-	getContainTotal()
+	Move(atom/dest)
+		if(!dest) return // Don't allow moves into null.
+
+		. = ..(dest)
+		if(!.) return
+
+		__checkContainer()
+
+	proc/getContainTotal()
 		. = 0
 		for(var/obj/O in contents)
 			. += O.__count * O.size
 
-	getPlural()
+	proc/getPlural()
 		return __base_plural
 
-	getCount()
+	proc/getCount()
 		return __count
 
-	canContain(atom/movable/A, amt)
+	proc/canContain(atom/movable/A, amt)
 		if(A) return (__canContain >= getContainTotal() + (A.size*amt))
 		else return __canContain
 
-	update()
+	proc/update()
 		if(!__count) del src
 
 		if(__count < 2 && canContain())
@@ -119,18 +101,11 @@ obj
 			name = __base_name
 			gender = "neuter"
 
-	pluralize(n = __count)
+	proc/pluralize(n = __count)
 		return (__count && n != 1) ? textPlural(__base_name) : __base_name
 
-	Move(atom/dest)
-		if(!dest) return // Don't allow moves into null.
 
-		. = ..(dest)
-		if(!.) return
-
-		__checkContainer()
-
-	match(obj/O)
+	proc/match(obj/O)
 		if(!O || !__maxCount || !O.__maxCount || O.type != src.type) return 0
 
 		for(var/V in vars)
@@ -146,7 +121,7 @@ obj
 					return 0
 		return 1
 
-	split(n)
+	proc/split(n)
 		if(!__count || n >= __count || contents.len) return src
 		if(n <= 0) return null
 
@@ -163,20 +138,20 @@ obj
 		O.__setCount(n)
 		return O
 
-	__setCount(amt)
+	proc/__setCount(amt)
 		__count = amt
 		update()
 
-	__addCount(amt)
+	proc/__addCount(amt)
 		__count += amt
 		update()
 
-	__remCount(amt)
+	proc/__remCount(amt)
 		__count -= amt
 		update()
 
 
-	__checkContainer()
+	proc/__checkContainer()
 		if(!loc) return // We're nowhere, so nothing to check.
 
 		if(__maxCount) // Stackable object.
@@ -192,4 +167,3 @@ obj
 		if(isobj(loc))
 			var/obj/O = loc
 			O.update()
-

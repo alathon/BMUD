@@ -3,8 +3,8 @@ menuAction
 	export_all = FALSE
 
 	proc
-		findMenu(M)
-			. = Run("findMenu", M)
+		findMenuAction(M)
+			. = Run("findMenuAction", M)
 
 		detach(menuAction/A)
 			. = Run("detach", A)

@@ -105,3 +105,38 @@ _service/parser
 	Unloaded()
 		if(parser) parser = null
 		..()
+
+atom/ParseMatch(Name, multi = 1, ignorecase = 1)
+	if(!Name) return 0
+	if(!__keywords) return 0
+
+	return __keywords.match(Name, ignorecase, multi)
+
+	// Kept here until we move this functionality under
+	// the respective types.
+	/*
+	var/list/match = __keywords.Copy()
+
+	if(isobj(src))
+		var/obj/O = src
+		if(O.getPlural()) match += O.getPlural()
+
+	if(!ignorecase) ignorecase = 1 // Always ignore case. <--
+
+	if(ignorecase)
+		Name = lowertext(Name)
+		for(var/a in match) a = lowertext(a)
+
+	if(!multi)
+		if(!match.Find(Name))
+			return FALSE
+	else
+		var/found_it = FALSE
+		for(var/Example in match)
+			if(inputOps.short2full(Name, Example, ignorecase))
+				found_it = TRUE
+		if(!found_it)
+			return FALSE
+	return TRUE
+	*/
+

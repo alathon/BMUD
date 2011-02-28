@@ -1,0 +1,11 @@
+--- Parser.dm	2011-02-23 23:20:08.272082732 +0100
++++ ParserNew.dm	2011-02-23 23:20:00.192087511 +0100
+@@ -245,7 +245,7 @@
+ 		if(allow_num)
+ 			match = text2num(token)
+ 			if(match)
+-				cont = (!temp_list || temp_list.Find(match))
++				cont = (!temp_list || temp_list.Find(match) || List == "world" )
+ 				if(cont) goto end
+ 		if(allow_link)
+ 			match = "<A HREF='[token]'>[token]</A>"

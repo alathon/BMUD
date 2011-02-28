@@ -30,6 +30,10 @@ client
 		if(mob)
 			mob.recieveText(T, data_type, colorize)
 			if(mob.tracer) mob.tracer.Input(T, data_type)
+		else
+			if(colorize && color_manager)
+				T = color_manager.Colorize(T)
+			src << T
 		return T
 
 atom/proc/recieveText()

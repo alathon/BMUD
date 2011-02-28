@@ -40,7 +40,7 @@ room
 			var/mob/M = A
 			M.direction = ""
 			if(M.client)
-				sendTxt(describeSelf(M), M, DT_MISC)
+				sendTxt(describeTo(M), M, DT_MISC)
 		return 1
 
 	Exited(atom/movable/O)
@@ -85,26 +85,4 @@ room
 		// TODO: Implement exit 'objects'
 		return L
 
-	describeSelf(mob/M)
-		if(!ismob(M)) return "Unfinished feature: Room.DescribeSelf() to other than mob!"
-
-		// Room Name, Room Description
-		. = ""
-		. += "\n\[[src.getName()]\]"
-		. += "\n"
-		. += "[src.getDesc()]\n"
-
-		// Room Exits
-		. += "Obvious exits: [src.exits2text()]"
-
-		// Room Contents
-		if(length(contents))
-			. += "\n\n"
-			for(var/mob/m in contents)
-				if(M == m || !M.canSee(m)) continue
-				. += "[m.describeSelf(src)]\n"
-			for(var/obj/O in contents)
-				if(!M.canSee(O)) continue
-				. += "[O.describeSelf(src)]\n"
-			. = copytext(.,1,length(.)) // Cut the last \n
 
