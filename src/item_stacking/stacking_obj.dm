@@ -75,6 +75,9 @@ obj
 		for(var/obj/O in contents)
 			. += O.__count * O.size
 
+	proc/getBaseName()
+		return __base_name
+
 	proc/getPlural()
 		return __base_plural
 
@@ -89,16 +92,16 @@ obj
 		if(!__count) del src
 
 		if(__count < 2 && canContain())
-			name   = __base_name
+			setName(__base_name)
 			suffix = " ([getContainTotal()]/[__canContain])"
 		else if(__count > 1)
 			gender = "plural"
 			suffix = " (x[__count])"
 			if(!__base_plural) __base_plural = textPlural(__base_name)
-			name = __base_plural
+			setName(__base_plural)
 		else
 			suffix = ""
-			name = __base_name
+			setName(__base_name)
 			gender = "neuter"
 
 	proc/pluralize(n = __count)

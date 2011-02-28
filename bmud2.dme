@@ -10,13 +10,13 @@ FILE:
 // BEGIN_FILE_DIR
 #define FILE_DIR .
 #define FILE_DIR "src"
-#define FILE_DIR "src\character_creation"
 #define FILE_DIR "src\parser"
 #define FILE_DIR "src\services"
 #define FILE_DIR "src\input"
 #define FILE_DIR "src\environment"
-#define FILE_DIR "src\help"
 #define FILE_DIR "src\olc"
+#define FILE_DIR "src\utility"
+#define FILE_DIR "src\item_stacking"
 // END_FILE_DIR
 
 // BEGIN_PREFERENCES
@@ -29,11 +29,13 @@ FILE:
 #include <alathon\services\services.dme>
 #include <alathon\telnet_input\telnet_input.dme>
 #include <alathon\callwrapper\callwrapper.dme>
-#include "src\_constants.dm"
-#include "src\bits.dm"
+#include "src\constants.dm" // Keep this first after libraries...
+
+#include "src\char_manager.dm"
 #include "src\booting.dm"
 #include "src\descriptions.dm"
 #include "src\mob.dm"
+#include "src\passwords.dm"
 #include "src\parser\chat.dm"
 #include "src\parser\general.dm"
 #include "src\parser\inputQueue.dm"
@@ -47,9 +49,6 @@ FILE:
 #include "src\services\service_controller.dm"
 #include "src\environment\room_cluster.dm"
 #include "src\environment\room_manager.dm"
-#include "src\help\help.dm"
-#include "src\help\help_manager.dm"
-#include "src\datum.dm"
 #include "src\input\menu.dm"
 #include "src\input\form.dm"
 #include "src\input\menuform.dm"
@@ -60,12 +59,12 @@ FILE:
 #include "src\environment\room.dm"
 #include "src\olc\olc.dm"
 #include "src\utility\textMatcher.dm"
+#include "src\utility\bits.dm"
 #include "src\utility\queue.dm"
 #include "src\utility\text_manipulation.dm"
 #include "src\utility\trace.dm"
 #include "src\item_stacking\stacking_mob.dm"
 #include "src\item_stacking\stacking_obj.dm"
-#include "src\character_creation\char_manager.dm"
 // END_INCLUDE
 
 #define TELNET_MODE // telnet mode defined, by default

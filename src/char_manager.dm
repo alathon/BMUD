@@ -1,18 +1,3 @@
-/* Clients own the password, not the mob. */ 
-client
-	var
-		__password
-
-	proc
-		// TODO: Hash password?
-		__passwordify(n)
-			return n
-
-		setPassword(n)
-			__password = __passwordify(n)
-
-		isPassword(p)
-			return __password == __passwordify(p)
 
 var/_service/character_manager/character_manager
 _service/character_manager
@@ -77,18 +62,22 @@ _service/character_manager
 			var/menuAction/create = new(characterForm())
 			var/menuAction/quit = new(new/menu("quit",
 						"(#bQ#n)uit the game"))
-			create.setCallback(new/callObject(src,"  parseCharacterForm"))
+			create.setCallback(new/callObject(src,"  parseCharacterForm")) 
+				// TODO: Change when hascall() is fixed
 			quit.setCallback(new/callObject(src,"  quitClient"))
+				// TODO: Change when hascall() is fixed
 			root.attach(create, quit)
 			menuOps.addMenu(root, "login")
 
 		__verify_name(client/C, n)
 			set name = "__verify_name"
+				// TODO: Remove when hascall() is fixed
 			if(length(n) < 3 || length(n) > 15)
 				return new/inputError("Name must be between 3 - 15 characters")
 
 		__verify_password(client/C, n)
 			set name = "__verify_password"
+				// TODO: Remove when hascall() is fixed
 			if(length(n) < 7)
 				return new/inputError("Password must be at least 7 characters.")
 

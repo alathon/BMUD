@@ -31,7 +31,15 @@ atom
 mob/__updateKeywords()
 	__keywords.setKeywords(list(lowertext(name),"mob"))
 
+obj/__updateKeywords()
+	var/list/L = new()
+	L += src.getBaseName()
+	if(src.getCount() > 1) L += src.getPlural()
+	__keywords.setKeywords(L)
+
 // Set name
+
+// Capitalize first letter.
 mob/setName(n)
 	if(!n) return
 	name = uppertext(copytext(n, 1, 2))+copytext(n, 2)

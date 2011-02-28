@@ -58,4 +58,4 @@ var
 		ENDING_TRACE = ".trc"
 
 		// Used by the service manager.
-		FILE_SERVICE_INDEX = "./services.cfg"
+		FILE_SERVICE_INDEX = "./cfg/services.cfg"
