@@ -1,40 +1,40 @@
-/*
-
-Barebones MUD (BMUD) 2.0, by Martin Gielsgaard Grünbaum, 2007
-
-bmud2\environment\room.dm
-
-Rooms are children of area, and work like 'locations' in a sense. This file contains
-general procedures to enable interaction with rooms.
-*/
 room
 	parent_type = /area
 
 	var
+		// Room exits for typical directions.
 		room/north
 		room/south
 		room/east
 		room/west
 
-	proc
-		enterMessage(atom/A)
-			if(ismob(A))
-				var/mob/M = A
-				sendTxt("\a [M.getName()] enters", contents, DT_MISC)
+	// Message to display to room before A enters.
+	proc/enterMessage(atom/A)
+		if(ismob(A))
+			var/mob/M = A
+			sendTxt("\a [M.getName()] enters", contents, DT_MISC)
 
-		exitMessage(atom/A)
-			if(ismob(A))
-				var/mob/M = A
-				sendTxt("\a [M.getName()] leaves[M.direction? " [M.direction]":""]", contents, DT_MISC)
+	// Message to display to room after A has left.
+	proc/exitMessage(atom/A)
+		if(ismob(A))
+			var/mob/M = A
+			sendTxt("\a [M.getName()] leaves[M.direction? " [M.direction]":""]", contents, DT_MISC)
 
 
-	Exit(atom/A) // A attempting to exit src.
+	// Allows you to prevent A from leaving/entering by returning 0.
+	// Effects related to the atom itself are checked by the
+	// atom BEFORE a call to Move() (and thus Exit) is made.
+	// As such, Exit() and Enter() should only check room-related
+	// effects (Such as locked doors, magical effects, or w/e)
+	Exit(atom/A)
 		return 1
 
 	Enter(atom/A)
 		enterMessage(A)
 		return 1
 
+	// Entered() and Exited() are called after something has
+	// done just that. Ideal place to f.ex. show the room description.
 	Entered(atom/A, atom/OldLoc)
 		if(ismob(A))
 			var/mob/M = A
@@ -47,10 +47,12 @@ room
 		exitMessage(O)
 		return 1
 
+	// Returns a reference to an exit based on a text string.
 	proc/hasExit(d)
 		if(d in list("north","south","east","west"))
 			return src.vars[d]
 
+	// Provides a colored text with exits, for room descriptions.
 	proc/exits2text()
 		. = ""
 		var/list/L = getExitNames()
@@ -63,6 +65,7 @@ room
 			else
 				. += "[a], "
 
+	// Provides a plain list of exit names as text
 	proc/getExitNames()
 		var/list/L = new()
 		if(istype(src.north)) L += "north"
@@ -74,6 +77,7 @@ room
 		// TODO: Implement exit 'objects'
 		return L
 
+	// Provides a list of exits as room references
 	proc/getExits()
 		var/list/L = new()
 		if(istype(src.north)) L += src.north
@@ -84,5 +88,3 @@ room
 		// TODO: Include exits contained in the 'contents' of the room.
 		// TODO: Implement exit 'objects'
 		return L
-
-

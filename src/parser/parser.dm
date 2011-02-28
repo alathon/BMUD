@@ -66,7 +66,7 @@ Parser/MUD
 	proc/CheckMoveCommand(T, mob/M)
 		if(M && M.loc && istype(M.loc, /room))
 			var/room/R = M.loc
-			var/list/Exits = R.getExits()
+			var/list/Exits = R.getExitNames()
 			for(var/Exit in Exits)
 				if(inputOps.short2full(T,Exit,1))
 					M.Movement(Exit)

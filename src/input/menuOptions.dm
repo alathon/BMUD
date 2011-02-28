@@ -1,16 +1,19 @@
 menuOptions
 	proc
 		menuAnswer(a, i)
+			// Note: If this if statement is moved below
+			// the below stuff assigning a value to A, then
+			// BYOND does a silent procedure crash.
+			if(istype(i, /menuAction))
+				return i
+
 			var/menuAction/A
 			if(!istype(a, /menuAction))
-				A = new/menuAction(A)
+				A = new/menuAction(a)
 			else
 				A = a
 
-			if(istype(i, /menuAction))
-				var/menuAction/M = i
-				return M
-			else if(i == menuOps.MENU_REPEAT)
+			if(i == menuOps.MENU_REPEAT)
 				return A
 			else if(i == menuOps.MENU_BACK)
 				return A.getParent()

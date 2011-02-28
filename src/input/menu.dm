@@ -155,7 +155,7 @@ menu
 		// input with inputOps.INPUT_BAD
 		__parse(answer)
 			if(inputOps.isEmpty(answer))
-				return 
+				return menuOps.MENU_REPEAT
 
 			if(answer == inputOps.INPUT_NOT_READY)
 				return answer

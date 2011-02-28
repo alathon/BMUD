@@ -15,8 +15,11 @@ atom
 		name = n
 		__updateKeywords()
 
-	proc/getName()
+	proc/getFullName()
 		return "\a [src][suffix]"
+
+	proc/getName()
+		return "\a [src]"
 
 	proc/getDesc()
 		return desc
@@ -24,9 +27,17 @@ atom
 	proc/matches(n)
 		return __keywords.match(n)
 
-obj
-	getName()
-		return "\an [src]"
+// Update keywords
+mob/__updateKeywords()
+	__keywords.setKeywords(list(lowertext(name),"mob"))
+
+// Set name
+mob/setName(n)
+	if(!n) return
+	name = uppertext(copytext(n, 1, 2))+copytext(n, 2)
+	__updateKeywords()
+	Log("TODO: Write log message for this([__LINE__])",
+		EVENT_CHARACTER)
 
 /* describeTo() is used to describe the object to another object. */
 atom/proc/describeTo(atom/A)
