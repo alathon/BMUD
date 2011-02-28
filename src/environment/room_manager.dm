@@ -93,7 +93,7 @@ _service/room_manager
 
 		var/new_len = ++clusters.len
 		clusters[new_len] = c
-		c.__uid = new_len
+		c.tag = new_len
 		return c
 
 	RemCluster(roomCluster/C)
@@ -101,8 +101,8 @@ _service/room_manager
 		if(!istype(C,/roomCluster)) return 0
 
 		C.RemoveSelf()
-		if(C.__uid == length(clusters))
+		if(C.tag == length(clusters))
 			clusters.len--
 		else
-			clusters.Cut(C.__uid, C.__uid+1)
+			clusters.Cut(C.tag, C.tag+1)
 		return clusters.len

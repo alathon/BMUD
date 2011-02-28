@@ -16,7 +16,6 @@ FILE:
 #define FILE_DIR "src\input"
 #define FILE_DIR "src\environment"
 #define FILE_DIR "src\help"
-#define FILE_DIR "src\objects"
 #define FILE_DIR "src\olc"
 // END_FILE_DIR
 
@@ -50,7 +49,7 @@ FILE:
 #include "src\environment\room_manager.dm"
 #include "src\help\help.dm"
 #include "src\help\help_manager.dm"
-#include "src\objects\datum.dm"
+#include "src\datum.dm"
 #include "src\input\menu.dm"
 #include "src\input\form.dm"
 #include "src\input\menuform.dm"
@@ -58,7 +57,7 @@ FILE:
 #include "src\input\inputParser.dm"
 #include "src\input\menuOptions.dm"
 #include "src\input\menuAction.dm"
-#include "src\objects\room.dm"
+#include "src\environment\room.dm"
 #include "src\olc\olc.dm"
 #include "src\utility\textMatcher.dm"
 #include "src\utility\queue.dm"

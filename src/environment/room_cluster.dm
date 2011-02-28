@@ -54,7 +54,7 @@ roomCluster
 		if(!rooms) rooms = new()
 		rooms.len++
 		rooms[rooms.len] = R
-		R.__uid = rooms.len
+		R.tag = rooms.len
 		return R
 
 	RemRoom(uid)
