@@ -1,3 +1,7 @@
+// Prevent the creation of a default mob for a client.
+// Clients just logging in have no mob, then. This
+// makes it easier to deal with.
+world/mob = 0
 
 var/_service/character_manager/character_manager
 _service/character_manager

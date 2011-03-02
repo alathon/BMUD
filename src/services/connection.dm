@@ -42,7 +42,7 @@ _service/connection_manager
 		getOnlinePlayers()
 			var/list/L = new()
 			for(var/client/C)
-				if(C.mob.isIngame())
+				if(C.mob)
 					L += C.mob
 			return L
 

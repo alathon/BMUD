@@ -12,9 +12,3 @@ mob
 	proc/setGender(n)
 		if(n in list("male","female","neuter"))
 			gender = n
-
-	// Is this mob in-game? Used by various stuff
-	// when looping through f.ex. client mobs, to
-	// figure out if they're in the game or not.
-	proc/isIngame()
-		return 1 // TODO: Subtype with return 0 for /mob/login
