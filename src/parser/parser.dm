@@ -42,6 +42,10 @@ Command
 				if(connection_manager) return connection_manager.getLinkdeadPlayers()
 			if("ground")
 				return temp_center.loc.contents
+			if("groundmob")
+				if(temp_center.loc)
+					return temp_center.loc.contents + temp_center.contents
+				return temp_center.contents
 			else
 				return ..(List, Range, temp_center)
 

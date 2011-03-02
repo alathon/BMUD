@@ -30,6 +30,8 @@ var
 		EVENT_CLIENTSEE = 8 // sendTxt() to client.
 		EVENT_CLIENTDO  = 9 // Input() to client. Not implemented yet.
 
+		EVENT_BADSTUFF  = 10 // Reserved for 'this shouldn't happen' stuff.
+
 		// Used by connection handler
 		EVENT_CONNECTION_NEW = 10
 		EVENT_CONNECTION_DEL = 11

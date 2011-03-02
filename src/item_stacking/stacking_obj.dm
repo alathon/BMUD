@@ -84,7 +84,16 @@ obj
 	proc/getCount()
 		return __count
 
+	// Can M take O from me?
+	proc/canTake(obj/O, mob/M)
+		if(!(O in src)) return 0
+		return 1
+
 	proc/canContain(atom/movable/A, amt)
+		if(!amt && isobj(A))
+			var/obj/O = A
+			amt = O.getCount()
+
 		if(A) return (__canContain >= getContainTotal() + (A.size*amt))
 		else return __canContain
 

@@ -12,13 +12,10 @@ Command/MUD/obj_manip
 	category = "\[0;36mObject Manipulation\[0m"
 
 	drop
-		format = "'drop'; num|!'all'; ?'of'; obj(contents, user)"
+		format = "'drop'; num|!'all'; ?'of'; ?!obj(contents, user)"
 		Process(mob/user, amount, obj/Drop)
 			..()
-			if(amount == "all" && !isobj(Drop))
-				user.Drop("all")
-			else
-				user.Drop(Drop, amount)
+			user.drop(Drop, amount)
 
 		drop_2
 			category = ""
@@ -32,7 +29,7 @@ Command/MUD/obj_manip
 		format = "'put'; num|!'all'; obj(contents, user); ?'in'|'into'; obj(contents, user)"
 		Process(mob/user, amount, obj/Put, obj/Container)
 			..()
-			user.Put(Put,Container,amount)
+			user.put(Put,Container,amount)
 
 		put_contents_2
 			category = ""
@@ -52,7 +49,7 @@ Command/MUD/obj_manip
 		format = "'put'; num|!'all'; obj(contents, user); ?'in'|'into'; obj(ground, user)"
 		Process(mob/user, amount, obj/Put, obj/Container)
 			..()
-			user.Put(Put,Container,amount)
+			user.put(Put,Container,amount)
 
 		put_ground_2
 			format = "'put'; obj(contents, user); ?'in'|?'into'; obj(ground, user)"
@@ -65,6 +62,38 @@ Command/MUD/obj_manip
 				..(user, null, "all", Container)
 
 	// get ?all|number OBJ ?from ?OBJ
+	// get OBJ
+	// get OBJ ?from OBJ
+	// get all|number OBJ
+	// get all|number OBJ ?from OBJ
+
+	get
+		format = "'get'|'grab'; num|!'all'; ?!obj(ground, user)"
+		Process(mob/user, amt, obj/O)
+			..()
+			user.get(O, null, amt)
+
+		get_2
+			format = "'get'|'grab'; obj(ground, user)"
+			category = ""
+			Process(mob/user, obj/O)
+				..()
+				user.get(O, null, "all")
+
+		get_3
+			format = "'get'|'grab'; obj(groundmob, user); ?'from'; obj(groundmob, user)"
+			category = ""
+			Process(mob/user, obj/obj_get, obj/obj_from)
+				..()
+				user.get(obj_get, obj_from, "all")
+
+		get_4
+			format = "'get'|'grab'; num|!'all'; obj(groundmob, user); ?'from'; obj(groundmob, user)"
+			category = ""
+			Process(mob/user, amt, obj/obj_get, obj/obj_from)
+				..()
+				user.get(obj_get, obj_from, amt)
+/*
 	get
 		format = "~'get'|~'grab'|~'fetch'; num|!'all'; anything; ?'from'; ?!anything"
 		Process(mob/user, amount, obj_get, obj_from)
@@ -124,7 +153,7 @@ Command/MUD/obj_manip
 			format = "~'get'|~'grab'|~'fetch'; 'all'|'everything'; anything"
 			Process(mob/user, obj_from)
 				..(user, 0, "all", obj_from)
-
+*/
 	inventory
 		format = "~'inventory'|'i'"
 		Process(mob/user)
@@ -137,30 +166,31 @@ Command/MUD/obj_manip
 Command/MUD/error
 	priority = 0
 	category = ""
+
 	drop_error_1
-		format = "'drop'"
+		format = "'drop'; ?num|'all'"
 		Process(mob/user)
-			sendTxt("Drop what?", user.client, DT_MISC, 0)
+			sendTxt("Drop what?", user, DT_MISC, 0)
 			return 0
 
 	put_error_1
-		format = "'put'; ?!obj(contents, user)|?!anything; ?'in'|?'into'; ?!anything"
-		Process(mob/user, obj/put, obj_into)
+		format = "'put'; obj(contents, user); ?'in'|?'into'"
+		Process(mob/user, obj/put)
 			if(istext(put))
-				sendTxt("Put into what?", user.client, DT_MISC, 0)
+				sendTxt("Put what?", user, DT_MISC, 0)
 				return 0
 			else
-				sendTxt("Put [put.getName()] into what?", user.client, DT_MISC, 0)
+				sendTxt("Put [put.getName()] into what?", user, DT_MISC, 0)
 				return 0
 
 	put_error_2
-		format = "'put'; num|!'all'; ?!obj(contents, user)|?!anything; ?'in'|?'into'; ?!anything"
-		Process(mob/user, obj/put, obj_into)
+		format = "'put'; num|!'all'; obj(contents, user); ?'in'|?'into'"
+		Process(mob/user, amt, obj/put)
 			if(istext(put))
-				sendTxt("Put into what?", user.client, DT_MISC, 0)
+				sendTxt("Put what?", user, DT_MISC, 0)
 				return 0
 			else
-				sendTxt("Put [put.getName()] into what?", user.client, DT_MISC, 0)
+				sendTxt("Put [amt] [put.getName()] into what?", user, DT_MISC, 0)
 				return 0
 
 

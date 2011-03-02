@@ -34,6 +34,7 @@ FILE:
 #include "src\char_manager.dm"
 #include "src\booting.dm"
 #include "src\descriptions.dm"
+#include "src\keywords.dm"
 #include "src\mob.dm"
 #include "src\passwords.dm"
 #include "src\parser\chat.dm"
