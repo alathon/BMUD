@@ -40,7 +40,7 @@ _service/character_manager
 
 			I = new("\nWhat is your name? (Type #zexit#n to quit)",
 					inputOps.ANSWER_TYPE_ANY)
-			I.setCallback(src, "  verify name") // Use underscores when hascall() is fixed
+			I.setCallback(src, "__verify_name")
 			F.addQuestion("name", I)
 
 			I = new("\nWhat gender would you like to be? \[#zmale#y female#n\] (Hit enter for male)", inputOps.ANSWER_TYPE_LIST)
@@ -51,7 +51,7 @@ _service/character_manager
 			I = new("\nPlease enter a password:",
 					inputOps.ANSWER_TYPE_ANY)
 			I.setConfirm("Please type it again:")
-			I.setCallback(src, "  verify password") // Use underscores when hascall() is fixed
+			I.setCallback(src, "__verify_password")
 			F.addQuestion("password", I)
 
 			return F
@@ -66,22 +66,16 @@ _service/character_manager
 			var/menuAction/create = new(characterForm())
 			var/menuAction/quit = new(new/menu("quit",
 						"(#bQ#n)uit the game"))
-			create.setCallback(new/callObject(src,"  parseCharacterForm")) 
-				// TODO: Change when hascall() is fixed
-			quit.setCallback(new/callObject(src,"  quitClient"))
-				// TODO: Change when hascall() is fixed
+			create.setCallback(new/callObject(src,"__parseCharacterForm")) 
+			quit.setCallback(new/callObject(src,"__quitClient"))
 			root.attach(create, quit)
 			menuOps.addMenu(root, "login")
 
 		__verify_name(client/C, n)
-			set name = "__verify_name"
-				// TODO: Remove when hascall() is fixed
 			if(length(n) < 3 || length(n) > 15)
 				return new/inputError("Name must be between 3 - 15 characters")
 
 		__verify_password(client/C, n)
-			set name = "__verify_password"
-				// TODO: Remove when hascall() is fixed
 			if(length(n) < 7)
 				return new/inputError("Password must be at least 7 characters.")
 
@@ -106,7 +100,7 @@ _service/character_manager
 				var/mob/M = new()
 				var/mob/Old = C.mob
 				M.key = C.key
-				M.setName(char_name)
+				M.setName("[uppertext(char_name,1,2)][lowertext(char_name,2)]")
 				M.setGender(char_gender)
 				C.setPassword(char_pass)
 				if(Old) del Old

@@ -1,31 +1,20 @@
-// Old, non-revamped code
-// TODO: Drop/Get/etc should be simple and small. The stacking code
-// should be separated from the action of dropping/getting/etc.
-// Alternately, at least name them properly like dropItem, etc.
-
+// TODO: containers / put / get from containers are totally untested
 mob/proc
-	__dropAll()
-		for(var/obj/O in contents)
-			__dropItem(O)
+	get(obj/item, obj/from, amount)
+		if(!item && amount == "all")
+			return __getAll(from)
 
-	__dropItem(obj/item)
-		if(!isobj(item))
-			. = "\ref[src] attempted to drop non-item \[[item]\]"
-			Log(., EVENT_BADSTUFF)
-			CRASH(.)
-
-		if(!(item in src))
-			. = "\ref[src] attempted to drop \[[item]\] not from inventory"
-			Log(., EVENT_BADSTUFF)
-			CRASH(.)
-
-		var/msg = "You drop [item.getName()] on the ground."
-		if(item.Move(loc))
-			sendTxt(msg, src)
-			return 1
-
-		sendTxt("You cannot drop that here.", src, DT_MISC, 0)
-		return 0
+		else if(istype(item))
+			if(amount == "all")
+				return __getItem(item, from)
+			else if(isnum(amount))
+				if(amount >= item.getCount())
+					return __getItem(item, from)
+				var/obj/Split = item.split(amount)
+				. = __getItem(Split, from)
+				if(!.)
+					del Split
+					item.__addCount(amount)
 
 	drop(obj/item, amount)
 		if(!item && amount == "all")
@@ -59,6 +48,29 @@ mob/proc
 				if(!.)
 					del Split
 					item.__addCount(amount)
+	__dropAll()
+		for(var/obj/O in contents)
+			__dropItem(O)
+
+	__dropItem(obj/item)
+		if(!isobj(item))
+			. = "\ref[src] attempted to drop non-item \[[item]\]"
+			Log(., EVENT_BADSTUFF)
+			CRASH(.)
+
+		if(!(item in src))
+			. = "\ref[src] attempted to drop \[[item]\] not from inventory"
+			Log(., EVENT_BADSTUFF)
+			CRASH(.)
+
+		var/msg = "You drop [item.getName()] on the ground."
+		if(item.Move(loc))
+			sendTxt(msg, src)
+			return 1
+
+		sendTxt("You cannot drop that here.", src, DT_MISC, 0)
+		return 0
+
 
 	__putAll(obj/container)
 		if(!isobj(container))
@@ -113,21 +125,6 @@ mob/proc
 			return 0
 
 
-	get(obj/item, obj/from, amount)
-		if(!item && amount == "all")
-			return __getAll(from)
-
-		else if(istype(item))
-			if(amount == "all")
-				return __getItem(item, from)
-			else if(isnum(amount))
-				if(amount >= item.getCount())
-					return __getItem(item, from)
-				var/obj/Split = item.split(amount)
-				. = __getItem(Split, from)
-				if(!.)
-					del Split
-					item.__addCount(amount)
 
 	__getItem(obj/item, obj/from)
 		if(!isobj(item))
