@@ -10,18 +10,16 @@
  * GNU General Public License for more details.
  ******************************************************************************/
 
-
 /*
-This file deals with logging mechanisms.
 
-The /log service constructs and manages /log's. Logs are used
-when you want large amounts of data regularly written to files.
-A log must have a service_level below or equal to the log managers
-service_level, in order for logging to occur. This check happens in
-log_manager.Input().
+This logger allows you to add log files via log_manager.addType(type_name). The
+typename should correspond with a constant in src/constants.dm, which is the type
+you provide the Log(msg, type) command. Example:
 
-If LOGGING isn't defined, the Log() procedure is cleared, for effeciency
-reasons.
+Log("Logging to general!", EVENT_GENERAL)
+
+Logs are stored in buffers and flushed periodically by a scheduler. Each type has its
+own /Event/Timer/, which is a recurring timer from Stephen001.eventscheduler.
 
 */
 
@@ -107,7 +105,10 @@ service/logMan
 
 	haltHook()
 		Log("Shutting down log manager", EVENT_SYS)
-		if(log_manager == src) log_manager = null
+		for(var/a in __logs)
+			flushLog(a)
 		for(var/a in __logs)
 			remType(a)
+
+		if(log_manager == src) log_manager = null
 		return 1
