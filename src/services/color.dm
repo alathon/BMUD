@@ -23,8 +23,8 @@
 
 
 
-var/_service/color_manager/color_manager
-_service/color_manager
+var/service/colorMan/color_manager
+service/colorMan
 	name = "ColorManager"
 
 	var
@@ -41,16 +41,17 @@ _service/color_manager
 		TelnetColor()
 		HTMLColor()
 
-	Loaded()
-		if(!color_manager) color_manager = src
+	bootHook()
 		for(var/A in typesof(/sequence/html/) - /sequence/html)
 			html_sequences += new A()
 		for(var/A in typesof(/sequence/telnet/) - /sequence/telnet)
 			var/sequence/S = new A()
 			telnet_sequences += S.character
 			telnet_sequences[S.character] = S
+		if(!color_manager) color_manager = src
+		return 1
 
-	Unloaded()
+	haltHook()
 		if(color_manager == src) color_manager = null
 		for(var/sequence/S in html_sequences)
 			del S
@@ -58,6 +59,7 @@ _service/color_manager
 			del S
 		html_sequences = null
 		telnet_sequences = null
+		return 1
 
 	Colorize(text, color_mode = TELNET_COLOR)
 		switch(color_mode)
@@ -66,7 +68,7 @@ _service/color_manager
 			if(HTML_COLOR)
 				return HTMLColor(text)
 			else
-				Log("Invalid arguments to colorize: colorize([text], [color_mode])", EVENT_PROCFAIL)
+				Log("ERROR: Invalid arguments to colorize: colorize([text], [color_mode])", EVENT_GENERAL)
 
 	FindHTMLSequence(i)
 		var/tmp

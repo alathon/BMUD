@@ -21,32 +21,13 @@ var
 		SERVICE_RUNNING = 2
 
 		// Log-related bits.
-		// Syslog
-		EVENT_PROC = 1
-		EVENT_PROCFAIL = 2
+		EVENT_CONNECTION	= "connection"
+		EVENT_SYS			= "sys"
+		EVENT_COMMAND		= "command"
+		EVENT_GENERAL		= "general"
+		EVENT_CHAT			= "chat"
 
-		EVENT_NEWDATUM = 4
-		EVENT_DELDATUM = 5
-		EVENT_SYSINFO  = 6
-		EVENT_GENERAL  = 7
-
-		EVENT_CLIENTSEE = 8 // sendTxt() to client.
-		EVENT_CLIENTDO  = 9 // Input() to client. Not implemented yet.
-
-		EVENT_BADSTUFF  = 10 // Reserved for 'this shouldn't happen' stuff.
-
-		// Used by connection handler
-		EVENT_CONNECTION_NEW = 10
-		EVENT_CONNECTION_DEL = 11
-		EVENT_CHARACTER      = 12
-		EVENT_CONNECTION     = 17
-
-		EVENT_SERVICE = 13 // Service-related events.
-
-		EVENT_CHAT = 14
-
-		EVENT_BADCOMMAND = 15
-		EVENT_COMMAND = 16
+		LOG_FLUSH_INTERVAL = 50 // Flush log every 5s, +- 1s
 
 		// Trace stuff
 		DT_MISC = 1
@@ -61,6 +42,3 @@ var
 
 		ENDING_LOG = ".log"
 		ENDING_TRACE = ".trc"
-
-		// Used by the service manager.
-		FILE_SERVICE_INDEX = "./cfg/services.cfg"

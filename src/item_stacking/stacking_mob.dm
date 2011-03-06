@@ -68,12 +68,12 @@ mob/proc
 	__dropItem(obj/item)
 		if(!isobj(item))
 			. = "\ref[src] attempted to drop non-item \[[item]\]"
-			Log(., EVENT_BADSTUFF)
+			Log(., EVENT_SYS)
 			CRASH(.)
 
 		if(!(item in src))
 			. = "\ref[src] attempted to drop \[[item]\] not from inventory"
-			Log(., EVENT_BADSTUFF)
+			Log(., EVENT_SYS)
 			CRASH(.)
 
 		var/msg = "You drop [item.getName()] on the ground."
@@ -87,7 +87,7 @@ mob/proc
 
 	__putAll(obj/container)
 		if(!isobj(container))
-			Log("Attempt to put inventory into non-object.", EVENT_BADSTUFF)
+			Log("Attempt to put inventory into non-object.", EVENT_SYS)
 			return 0
 
 		for(var/obj/O in contents)
@@ -97,22 +97,22 @@ mob/proc
 	__putItem(obj/put, obj/container)
 		if(!isobj(put))
 			. = "Attempt to put non-object"
-			Log(. , EVENT_BADSTUFF)
+			Log(. , EVENT_SYS)
 			CRASH(.)
 
 		if(!isobj(container))
 			. = "Attempt to put [put.getName()](\ref[put]) into non-object."
-			Log(. , EVENT_BADSTUFF)
+			Log(. , EVENT_SYS)
 			CRASH(.)
 
 		if(!(put in src))
 			. = "\ref[src] attempted to put \[[put]\] not from inventory"
-			Log(., EVENT_BADSTUFF)
+			Log(., EVENT_SYS)
 			CRASH(.)
 
 		if(!(container in src) && !(container in loc))
 			. = "\ref[src] attempted to put into \[[container.getName()]\] not on ground/in inventory"
-			Log(., EVENT_BADSTUFF)
+			Log(., EVENT_SYS)
 			CRASH(.)
 
 		if(put == container)
@@ -142,12 +142,12 @@ mob/proc
 	__getItem(obj/item, obj/from)
 		if(!isobj(item))
 			. = "Attempt to get non-object"
-			Log(., EVENT_BADSTUFF)
+			Log(., EVENT_SYS)
 			CRASH(.)
 
 		if(from && !isobj(from))
 			. = "Attempt to get from a non-object"
-			Log(., EVENT_BADSTUFF)
+			Log(., EVENT_SYS)
 			CRASH(.)
 
 		var/msg = "get [item.getName()]"
@@ -157,7 +157,7 @@ mob/proc
 			msg += " from [from.getName()]."
 			if(!(item in from))
 				. = "Attempt to get [item.getName()] which isn't in [from.getName()]"
-				Log(., EVENT_BADSTUFF)
+				Log(., EVENT_SYS)
 				CRASH(.)
 
 			if(!from.canTake(item, src))

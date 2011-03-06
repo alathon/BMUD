@@ -16,26 +16,25 @@
 // makes it easier to deal with.
 world/mob = 0
 
-var/_service/character_manager/character_manager
-_service/character_manager
+var/service/charMan/character_manager
+service/charMan
 	name = "CharacterManager"
-	dependencies = list("ConnectionManager", "IO")
 
-	Loaded()
+	bootHook()
 		__createLoginMenu()
 		if(!character_manager) character_manager = src
-		..()
+		return 1
 
-	Unloaded()
+	haltHook()
 		if(character_manager == src) character_manager = null
-		..()
+		return 1
 
 
 	proc
 		newClientConnection(client/C)
 			if(!C || !istype(C))
-				Log("Attempt to call newClientConnection with bad argument",
-						EVENT_CHARACTER)
+				Log("ERROR Attempt to call newClientConnection with bad argument",
+						EVENT_GENERAL)
 				return
 			// TODO: Check whether the player was linkdead last, or
 			// we're recovering from a hotboot or similar condition.

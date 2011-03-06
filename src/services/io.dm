@@ -14,40 +14,34 @@
 client
 	proc/recieveText(T, data_type, colorize = 1)
 		if(mob)
-			mob.recieveText(T, data_type, colorize)
 			if(mob.tracer) mob.tracer.Input(T, data_type)
-		else
-			if(colorize && color_manager)
-				T = color_manager.Colorize(T)
-			src << T
+		if(colorize && color_manager)
+			T = color_manager.Colorize(T)
+		src << T
 		return T
 
 atom/proc/recieveText()
 
 mob
 	recieveText(txt, data_type, colorize = 0)
-		if(client)
-			if(colorize && color_manager)
-				txt = color_manager.Colorize(txt)
-			src << txt
-		..()
+		if(client) client.recieveText(txt, data_type, colorize)
 
 proc
 	sendTxt(txt, targets, data_type = DT_MISC, colorize = 1)
 		if(IO)
 			return IO.sendTxt(txt, targets, data_type, colorize)
 
-var/_service/auto/io/IO
-_service/auto/io
+var/service/io/IO
+service/io
 	name = "IO"
 
-	Loaded()
+	bootHook()
 		if(!IO) IO = src
-		..()
+		return 1
 
-	Unloaded()
+	haltHook()
 		if(IO == src) IO = null
-		..()
+		return 1
 
 	proc
 		sendTxt()

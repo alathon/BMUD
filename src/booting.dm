@@ -10,11 +10,23 @@
  * GNU General Public License for more details.
  ******************************************************************************/
 
+// List of services
+boot/getServices()
+	return list("/service/logMan"
+			  , "/service/io"
+			  , "/service/colorMan"
+			  , "/service/connectionMan"
+			  , "/service/roomMan"
+			  , "/service/charMan"
+			  , "/service/parser")
+
+// Helper to keep client in limbo until we're ready
+proc/blockUntilRunning(client/C)
+	while(!mud || mud.getState() != BOOT_STATE_RUNNING)
+		sleep(1)
+
+// Global 'mud' object
+var/boot/mud
 world/New()
-	DEFAULT_SERVICE_FILE = "cfg/services.cfg"
-	log_manager = new()
-	if(log_manager.Load())
-		log_manager.Loaded()
-		service_controller = new()
-	else
-		del world
+	mud = new()
+	mud.setState(BOOT_STATE_BOOT)

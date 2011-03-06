@@ -24,7 +24,7 @@ client/Command(T)
 		if(parser.Parse(T, src.mob))
 			Log("[(src.mob ? src.mob.name : src.ckey)]: [T]", EVENT_COMMAND)
 		else
-			Log("[(src.mob ? src.mob.name : src.ckey)]: [T]", EVENT_BADCOMMAND)
+			Log("[(src.mob ? src.mob.name : src.ckey)]: [T]", EVENT_COMMAND)
 
 	src << "> \..."
 
@@ -98,17 +98,17 @@ Parser/MUD
 		return 1
 
 var/Parser/MUD/parser
-_service/parser
+service/parser
 	name = "Parser"
 
-	Loaded()
+	bootHook()
 		if(!parser)
 			parser = new/Parser/MUD()
-		..()
+		return 1
 
-	Unloaded()
+	haltHook()
 		if(parser) parser = null
-		..()
+		return 1
 
 atom/ParseMatch(Name, multi = 1, ignorecase = 1)
 	if(!Name) return 0

@@ -26,9 +26,11 @@ FILE:
 
 // BEGIN_INCLUDE
 #include <abyssdragon\parser\Parser.dme>
-#include <alathon\services\services.dme>
+//#include <alathon\services\services.dme>
 #include <alathon\telnet_input\telnet_input.dme>
 #include <alathon\callwrapper\callwrapper.dme>
+#include <alathon\bootprocess\bootprocess.dme>
+#include <stephen001\eventscheduling\Events\Events.dme>
 
 #include "src\constants.dm" // Keep this first after libraries...
 
@@ -48,7 +50,7 @@ FILE:
 #include "src\services\connection.dm"
 #include "src\services\io.dm"
 #include "src\services\logging.dm"
-#include "src\services\service_controller.dm"
+//#include "src\services\service_controller.dm"
 #include "src\environment\room_cluster.dm"
 #include "src\environment\room_manager.dm"
 #include "src\input\menu.dm"

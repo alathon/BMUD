@@ -11,8 +11,8 @@
  ******************************************************************************/
 
 
-var/_service/room_manager/room_manager
-_service/room_manager
+var/service/roomMan/room_manager
+service/roomMan
 	name = "RoomManager"
 
 	var
@@ -31,8 +31,12 @@ _service/room_manager
 		UnloadCluster()
 		CreateCluster()
 
-	Loaded()
+	bootHook()
 		if(!room_manager) room_manager = src
+		return 1
+
+	initHook()
+		mud.logMsg("Loading demo area")
 		var/roomCluster/C = CreateCluster("Test Cluster", "This is the test cluster")
 		AddCluster(C)
 		var/room/one = C.CreateRoom("Test One", "Test One Description")
@@ -47,11 +51,11 @@ _service/room_manager
 		O.__base_name = "rose"
 		O.update()
 		O.Move(one)
-		..()
+		return 1
 
-	Unloaded()
+	haltHook()
 		if(room_manager == src) room_manager = null
-		..()
+		return 1
 
 	GetRoom(...)
 		if(length(args) < 2) return 0

@@ -14,10 +14,9 @@
 // /client additions for connecting
 client/New()
 	determineClientType()
-	while(!service_controller || !service_controller._running)
-		sleep(1)
+	blockUntilRunning(src)
 
-	Log("New client connected from [address]", EVENT_CONNECTION_NEW)
+	Log("New client connected from [address]", EVENT_CONNECTION)
 
 	if(character_manager)
 		character_manager.newClientConnection(src)
@@ -34,18 +33,17 @@ client/proc/determineClientType()
 		del src // No DS connections
 
 
-var/_service/connection_manager/connection_manager
-_service/connection_manager
+var/service/connectionMan/connection_manager
+service/connectionMan
 	name = "ConnectionManager"
-	dependencies = list("IO")
 
-	Loaded()
+	bootHook()
 		if(!connection_manager) connection_manager = src
-		..()
+		return 1
 
-	Unloaded()
+	haltHook()
 		if(connection_manager == src) connection_manager = null
-		..()
+		return 1
 
 	var/list
 		__online_clients = new()
@@ -72,5 +70,5 @@ _service/connection_manager
 		remOnlineClient(client/C)
 			Log("Removed online client: [C.key]/[C.address ? C.address : "localhost"]", EVENT_CONNECTION)
 
-		addLinkdeadPlayer(mob/M) // TODO:
-		remLinkdeadPlayer(mob/M) // TODO:
+		addLinkdeadPlayer(mob/M) // TODO
+		remLinkdeadPlayer(mob/M) // TODO
