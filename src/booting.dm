@@ -7,7 +7,6 @@ bmud2\core\booting.dm
 booting.dm supplies the only, central world/New().
 */
 
-
 world/New()
 	DEFAULT_SERVICE_FILE = "cfg/services.cfg"
 	log_manager = new()

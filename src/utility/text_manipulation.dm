@@ -7,6 +7,12 @@ bmud2\core\text_manipulation.dm
 Text manipulation procedures, and related.
 */
 
+proc/capitalize(t)
+	if(!t) return
+	if(length(t)==1) return uppertext(t)
+
+	return "[uppertext(copytext(t,1,2))][lowertext(copytext(t,2))]"
+
 // Thanks to Dan for the next two procedures. They should be self-explanatory in use and function
 proc/text2list(txt,delim)
 	var

@@ -100,7 +100,7 @@ _service/character_manager
 				var/mob/M = new()
 				var/mob/Old = C.mob
 				M.key = C.key
-				M.setName("[uppertext(char_name,1,2)][lowertext(char_name,2)]")
+				M.setName(capitalize(char_name))
 				M.setGender(char_gender)
 				C.setPassword(char_pass)
 				if(Old) del Old

@@ -1,0 +1,22 @@
+- Feature-rich command parser and methods for gathering client input
+- Basic room/area structure with exits, descriptions, etc.
+- A very basic set of commands to interact with the world, such as:
+	- Who, look, get, drop, etc.
+- Item stacking, containers, etc.
+	- Various basic, straight-forward systems that most MUDs need for
+	  items
+	- Items which are meant to, can stack.
+	- Items can be put into, gotten from containers [NOT TESTED YET]
+	- Rudimentary skeleton to implement any sort of
+	  inventory/container-related control, such as giving items a size,
+	  weight, etc. [NOT QUITE THERE YET]
+- Easy event scheduling for anything in the game [TODO]
+- Modular 'services' that can be loaded/unloaded dynamically, while the
+  game is running. [IS THIS EVEN USEFUL? CONSIDER BOOTLOADER INSTEAD]
+- Standard 'copyover' functionality for saving the state of the world,
+  re-compiling and reconnecting everyone to where they were before.
+  [TODO]
+- Handles linkdeath and reconnecting after going linkdead [TODO]
+- Basic notion of 'game state' and 'combat state' [TODO]
+- Example of implementing very simple combat & two classes, using unique
+  parsers for each class. [TODO]
