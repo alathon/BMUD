@@ -1,11 +1,16 @@
-/*
+/*******************************************************************************
+ * BMUD ("this program") is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ ******************************************************************************/
 
-Barebones MUD (BMUD) 2.0, by Martin Gielsgaard Grünbaum, 2007
-
-bmud2\environment\map.dm
-
-Map-related procedures, for drawing and interpreting surroundings.
-*/
+// Legacy code to draw ASCII map. Consider revisiting??
 atom/var/_text = ""
 
 proc
@@ -31,35 +36,27 @@ proc
 
 mob/proc
 	FormatMap(size_x = 20, size_y = 10)
-		if(client.client_type == CLIENT_TELNET)
-			var/turf/T = loc
-			var/list/L = DrawMap(size_x, size_y, src, 1)
+		var/turf/T = loc
+		var/list/L = DrawMap(size_x, size_y, src, 1)
 
-			. += "\[1;37m+\[0;37m[Center("\[1;37m\[\[0;36m[T.name]\[1;37m\]\[0;37m", "-", size_x + 28)]\[1;37m+\[0m\n"
-			for(var/Y = 1 to size_y)
-				. += "\[0;37m|"
-				for(var/X = 1 to size_x)
-					//world << "[X],[Y]"
-					var/turf/t = L[Y][X]
-					if(!t)
-						. += " "
-					else if(t == loc)
-						. += "\[0;37m@\[0m"
-					else
-						. += "\[0;[t._text]\[0m"
-				. += "\[0;37m|\n"
-			. += "\[1;37m+[Fill("", "-", size_x)]\[1;37m+\[0m\n"
-			. += "\[0;37m\[\[0m[T.x]X,[T.y]Y,[T.z]Z\[0;37m]\[0m\n"
+		. += "\[1;37m+\[0;37m[Center("\[1;37m\[\[0;36m[T.name]\[1;37m\]\[0;37m", "-", size_x + 28)]\[1;37m+\[0m\n"
+		for(var/Y = 1 to size_y)
+			. += "\[0;37m|"
+			for(var/X = 1 to size_x)
+				var/turf/t = L[Y][X]
+				if(!t)
+					. += " "
+				else if(t == loc)
+					. += "\[0;37m@\[0m"
+				else
+					. += "\[0;[t._text]\[0m"
+			. += "\[0;37m|\n"
+		. += "\[1;37m+[Fill("", "-", size_x)]\[1;37m+\[0m\n"
+		. += "\[0;37m\[\[0m[T.x]X,[T.y]Y,[T.z]Z\[0;37m]\[0m\n"
 
-			if(color_manager)
-				. += color_manager.Colorize("[T.desc]\n[T.DescribeExits(src)][T.DescribeContents(src)]", CLIENT_TELNET)
-			else
-				. += "[T.desc]\n[T.DescribeExits(src)][T.DescribeContents(src)]"
-
-			sendTxt(., src, DT_MISC, 0)
-
+		if(color_manager)
+			. += color_manager.Colorize("[T.desc]\n[T.DescribeExits(src)][T.DescribeContents(src)]", CLIENT_TELNET)
 		else
-			var/turf/T = loc
-			. += (color_manager) ? color_manager.Colorize("[T.desc]\n[T.DescribeExits(src)][T.DescribeContents(src)]", CLIENT_DS) : \
-									"[T.desc]\n[T.DescribeExits(src)][T.DescribeContents(src)]"
-			sendTxt(., src, DT_MISC, 0)
+			. += "[T.desc]\n[T.DescribeExits(src)][T.DescribeContents(src)]"
+
+		sendTxt(., src, DT_MISC, 0)

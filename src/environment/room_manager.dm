@@ -1,13 +1,15 @@
-/*
+/*******************************************************************************
+ * BMUD ("this program") is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ ******************************************************************************/
 
-Barebones MUD (BMUD) 2.0, by Martin Gielsgaard Grünbaum, 2007
-
-bmud2\environment\room_manager.dm
-
-The room manager keeps track of room clusters, also supplying a general set of procedures
-to fetch rooms, objs and mobs within a cluster without maintaining a direct reference to the
-cluster itself.
-*/
 
 var/_service/room_manager/room_manager
 _service/room_manager

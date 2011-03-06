@@ -1,3 +1,16 @@
+/*******************************************************************************
+ * BMUD ("this program") is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ ******************************************************************************/
+
+
 mob/proc
 	Movement(d)
 		var/room/R = src.loc
@@ -7,53 +20,3 @@ mob/proc
 		else
 			if(client)
 				sendTxt("You can't move there.", src, DT_MISC, 0)
-
-/*
-Command/MUD/movement
-	category = "\[0;33mMovement\[0m"
-	northwest
-		format = "'northwest'|'nw'|'northw'"
-		Process(mob/user)
-			..()
-			user.Movement("northwest")
-
-	northeast
-		format = "'northeast'|'ne'|'northe'"
-		Process(mob/user)
-			..()
-			user.Movement("northeast")
-
-	southeast
-		format = "'southeast'|'se'|'southe'"
-		Process(mob/user)
-			..()
-			user.Movement("southeast")
-
-	southwest
-		format = "'soutwest'|'sw'|'southw'"
-		Process(mob/user)
-			..()
-			user.Movement("southwest")
-
-	north
-		format = "'north'|'n'|'forward'"
-		Process(mob/user)
-			..()
-			user.Movement("north")
-
-	south
-		format = "'south'|'s'|'back'"
-		Process(mob/user)
-			..()
-			user.Movement("south")
-	east
-		format = "'east'|'e'|'right'"
-		Process(mob/user)
-			..()
-			user.Movement("east")
-	west
-		format = "'west'|'w'|'left'"
-		Process(mob/user)
-			..()
-			user.Movement("west")
-*/

@@ -1,3 +1,15 @@
+/*******************************************************************************
+ * BMUD ("this program") is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ ******************************************************************************/
+
 // Add support for 'back'/'exit'/'forward'
 Input
 	proc
@@ -27,9 +39,17 @@ inputOptions
 		INPUT_EXIT = "exit"
 		INPUT_FORWARD = "next"
 		INPUT_BACK = "back"
-/*
+
 inputParser/default
 	answer_list
+		getAnswers()
+			var/list/L = I.__answers.Copy()
+			if(I.__allowExit) L += inputOps.INPUT_EXIT
+			if(I.__allowBack) L += inputOps.INPUT_BACK
+			if(I.__allowForward) L += inputOps.INPUT_FORWARD
+			return L
+
+	answer_numbered_list
 		getAnswers()
 			var/list/L = I.__answers.Copy()
 			if(I.__allowExit) L += inputOps.INPUT_EXIT
@@ -70,4 +90,3 @@ inputParser/default
 				return inputOps.getError(inputOps.ERROR_NOTNUM)
 			I.__input = n
 			return
-*/

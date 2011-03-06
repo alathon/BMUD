@@ -1,11 +1,16 @@
-/*
+/*******************************************************************************
+ * BMUD ("this program") is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ ******************************************************************************/
 
-Barebones MUD (BMUD) 2.0, by Martin Gielsgaard Grünbaum, 2007
 
-bmud2\core\bits.dm
-
-bits.dm defines a set of bit-shifting related procedures, for ease of use
-*/
 proc
 	is_set(bitflag, value)
 		return (bitflag&value)
