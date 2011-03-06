@@ -21,7 +21,7 @@
 - To figure out whether an atom matches a text string, use the
   atom.matches(textstring) procedure. It will return the match if
   there is one.
-- All atoms have a '__desc' variable, intended to be similar to the
+- All atoms have a 'desc' variable, intended to be similar to the
   'longdesc' variable most MUDs have. This would be a personal
   biography for players, a longer description of how an obj looks,
   or similar. However, to *read* the description, use atom.getDesc(),
@@ -30,8 +30,6 @@
 */
 
 atom/proc/describeTo(atom/A)
-atom/proc/getDesc()
-atom/var/__desc
 
 // Used by various things to determine whether the mob
 // has visibility of the atom A.

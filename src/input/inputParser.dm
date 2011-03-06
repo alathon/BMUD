@@ -42,7 +42,7 @@ inputOptions
 
 inputParser/default
 	answer_list
-		getAnswers()
+		getAnswers(Input/I)
 			var/list/L = I.__answers.Copy()
 			if(I.__allowExit) L += inputOps.INPUT_EXIT
 			if(I.__allowBack) L += inputOps.INPUT_BACK
@@ -50,7 +50,7 @@ inputParser/default
 			return L
 
 	answer_numbered_list
-		getAnswers()
+		getAnswers(Input/I)
 			var/list/L = I.__answers.Copy()
 			if(I.__allowExit) L += inputOps.INPUT_EXIT
 			if(I.__allowBack) L += inputOps.INPUT_BACK
@@ -70,7 +70,7 @@ inputParser/default
 					break
 				else if(I.__allowForward && cmptext(n,inputOps.INPUT_FORWARD))
 					break
-				return inputOps.getError(inputOps.ERROR_YESNO)
+				return inputOps.getError(inputOps.ERROR_YESORNO)
 			I.__input = n
 			return
 
