@@ -26,9 +26,9 @@ single-threaded, and the language is quite nice to deal with.
 The code documentation is VERY minor at the moment. That should change when I have time,
 but until then, here is a short rundown of some key stuff:
 
-## src/booting.dm - Boots up the world. The boot process uses Alathon.bootprocess
-## src/parser/parser.dm - Implements the parser. Uses AbyssDragon.Parser
-## Alathon.telnet_input - Library responsible for gathering input from the user
-## src/parser/chat.dm - Some example chat-related commands. Check out the other files here too
-## src/item_stacking/ - An implementation of item stacking
-## src/char_manager.dm - The service that handles character creation/saving/loading
+* src/booting.dm - Boots up the world. The boot process uses Alathon.bootprocess
+* src/parser/parser.dm - Implements the parser. Uses AbyssDragon.Parser
+* Alathon.telnet_input - Library responsible for gathering input from the user
+* src/parser/chat.dm - Some example chat-related commands. Check out the other files here too
+* src/item_stacking/ - An implementation of item stacking
+* src/char_manager.dm - The service that handles character creation/saving/loading
