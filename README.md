@@ -9,6 +9,7 @@ quite nice to deal with in many ways.
 * Download [BYOND](http://www.byond.com/download/) for Linux
 * Follow the instructions in the README.
 * Run 'make depend' in the bmud root dir. This will download dependencies.
+* Run 'make'. This will compile the game, the compiled VM executable has the .dmb extension
 * Edit run.sh if you want to change the port the game is hosted on. 5555 by default
 * To run the game, use run.sh (or check out the command and call it manually). Note
 that it doesn't screen or use & or anything by default.
@@ -32,3 +33,10 @@ but until then, here is a short rundown of some key stuff:
 * src/parser/chat.dm - Some example chat-related commands. Check out the other files here too
 * src/item_stacking/ - An implementation of item stacking
 * src/char_manager.dm - The service that handles character creation/saving/loading
+
+# Where are those libraries?
+
+BYOND will, at least with default settings, store libraries under ~/.byond/lib/, separated by
+author of the library. So ~/.byond/lib/alathon/callwrapper/ is the Alathon.callwrapper library.
+
+Check out the Makefile under depend: to see how DreamDownload works, a downloader for libraries.
