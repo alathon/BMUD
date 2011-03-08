@@ -16,7 +16,6 @@ Command/MUD/Chat
 		format = "~'tell'|~'whisper'; $~mob(online_players); anything"
 		Process(mob/user, mob/target, T)
 			..()
-			T = html_encode(T)
 
 			if(target == src)
 				sendTxt("Getting lonely, are we?", user, DT_MISC, 0)
@@ -43,7 +42,6 @@ Command/MUD/Chat
 		format = "~'say'; anything"
 		Process(mob/user, T)
 			..()
-			T = html_encode(T)
 			if(!T || T == " ")
 				sendTxt("Say what?", user, DT_MISC, 0)
 				return 1

@@ -103,7 +103,6 @@ service/colorMan
 		while(next)
 			if(!(start == next)) // # at start is baad
 				. += copytext(t, start, next) // Copy up until color character.
-
 			if(next == tlen)
 				break // End of string
 
