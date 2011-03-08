@@ -10,7 +10,10 @@
  * GNU General Public License for more details.
  ******************************************************************************/
 
+/*
 
+
+*/
 // Prevent the creation of a default mob for a client.
 // Clients just logging in have no mob, then. This
 // makes it easier to deal with.
@@ -47,7 +50,7 @@ service/charMan
 
 
 		characterForm()
-			var/form/menu/F = new("create", "(#zC#n)reate a character")
+			var/form/F = new("create", "(#zC#n)reate a character")
 			var/Input/I
 
 			I = new("\nWhat is your name? (Type #zexit#n to quit)",
@@ -73,14 +76,24 @@ service/charMan
 			del C
 			return menuOps.MENU_EXIT
 
+		__runCharacterForm(client/C, menu/M)
+			var/form/F = characterForm()
+			var/exit = F.begin(C)
+
+			if(exit == formOps.EXIT_DISCONNECT)
+				return menuOps.MENU_EXIT
+			else if(exit == formOps.EXIT_EXIT)
+				return menuOps.MENU_BACK
+			else if(exit == formOps.EXIT_COMPLETE)
+				return __parseCharacterForm(C,F)
+
 		__createLoginMenu()
-			var/menuAction/root = new(new/menu)
-			var/menuAction/create = new(characterForm())
-			var/menuAction/quit = new(new/menu("quit",
-						"(#bQ#n)uit the game"))
-			create.setCallback(new/callObject(src,"__parseCharacterForm")) 
+			var/menu/root = new()
+			var/menu/create = new("create", "(#gC#n)reate a character")
+			var/menu/quit = new("quit", "(#bQ#n)uit the game")
+			create.setCallback(new/callObject(src,"__runCharacterForm"))
 			quit.setCallback(new/callObject(src,"__quitClient"))
-			root.attach(create, quit)
+			root.attach(list(create, quit))
 			menuOps.addMenu(root, "login")
 
 		__verify_name(client/C, n)
@@ -102,7 +115,7 @@ service/charMan
 			I.getInput(C)
 
 		__parseCharacterForm(client/C, form/F)
-			if(F.isComplete() && C)
+			if(istype(C) && istype(F))
 				var/char_name = F.getAnswer("name")
 				var/char_pass = F.getAnswer("password")
 				var/char_gender = F.getAnswer("gender")
@@ -117,6 +130,4 @@ service/charMan
 				C.setPassword(char_pass)
 				if(Old) del Old
 				M.Move(room_manager.GetRoom(1,1))
-				return menuOps.MENU_EXIT
-			else return menuOps.MENU_REPEAT
-
+			return menuOps.MENU_EXIT

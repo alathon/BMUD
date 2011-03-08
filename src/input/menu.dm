@@ -1,19 +1,18 @@
-/*******************************************************************************
- * BMUD ("this program") is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- ******************************************************************************/
-
-
-// TODO Consider revamping - Maybe ? A bit messy...
-
 menu
+	var
+		name = ""
+
+		/* Private variables */
+		__ready = FALSE
+		__allowExit = TRUE
+		__allowBack = TRUE
+		__displayText
+		callObject/__callback
+		callObject/__inputFormatter
+		textMatcher/__keywords
+		menu/__parent
+		list/__children = new()
+
 	New(list/keywords, displayText, menu/__parent)
 		if(keywords)
 			if(istext(keywords)) keywords = list(keywords)
@@ -25,26 +24,17 @@ menu
 			__parent.attach(src)
 		__ready = TRUE
 
-	var
-		name = ""
-
-		/* Private variables */
-		__ready = FALSE
-		__allowExit = TRUE
-		__allowBack = TRUE
-		__displayText
-		form/__form
-		callObject/__callback
-		callObject/__inputFormatter
-		textMatcher/__keywords
-		menu/__parent
-		list/__children = new()
-
 	proc
+		setParent(menu/M)
+			if(istype(M) || isnull(M)) __parent = M
+
+		getParent()
+			return __parent
+
 		// Default procedure for menu display. Called by __getInput()
 		// to figure out how the Input's question should look.
 		defaultQuestionFormat()
-			for(var/menuAction/M in __children)
+			for(var/menu/M in __children)
 				. += "[M.getDisplayText()]\n"
 			. += "Select an item from the menu\n"
 
@@ -58,10 +48,10 @@ menu
 		// Recursive function to find a specific menu
 		// Expects a string, and returns a menu reference
 		// or null if no menu is found.
-		findMenuAction(n)
+		findMenu(n)
 			if(src.name == n) return src
-			for(var/menuAction/M in __children)
-				. = M.findMenuAction(n)
+			for(var/menu/M in __children)
+				. = M.findMenu(n)
 				if(!isnull(.)) return .
 			return null
 
@@ -96,7 +86,8 @@ menu
 			if(!C) return
 			if(istype(__callback) && !length(__children))
 				var/c = __callback.Run(C, src)
-				return c
+				return c // TODO Stop trusting the callback value..
+						 // Maybe make sure its a valid return value for ask?
 
 			var/answer = inputOps.INPUT_BAD
 			while(C && answer == inputOps.INPUT_BAD)
@@ -108,21 +99,21 @@ menu
 					sleep(1)
 					continue
 
-			var/menuAction/A = menuOps.menuAnswer(src, answer)
+			var/menu/A = menuOps.menuAnswer(src, answer)
 			if(istype(A)) return A.ask(C)
 			else return
 
 		// Remove all children. This function is recursive by default.
 		detachAll(recurse=1)
 			__ready = FALSE
-			for(var/menuAction/M in __children)
+			for(var/menu/M in __children)
 				__children -= M
 				M.setParent(null)
 				if(recurse) M.detachAll()
 			__ready = TRUE
 
 		// Remove the menuAction M if it is a child of this menu.
-		detatch(menuAction/M)
+		detatch(menu/M)
 			__ready = FALSE
 			if(M.getParent() == src && M in __children)
 				__children -= M
@@ -137,8 +128,9 @@ menu
 		// attach(menuAction1, menuAction2, menuAction3)
 		attach(list/L)
 			__ready = FALSE
-			if(!istype(L)) L = args
-			for(var/menuAction/D in L)
+			if(!L) return
+			if(istype(L, /menu)) L = list(L)
+			for(var/menu/D in L)
 				if(istype(D))
 					__children += D
 					D.setParent(src)
@@ -147,7 +139,7 @@ menu
 		/* PRIVATE FUNCTIONS */
 		// For default callback mechanisms to navigate to menu's
 		__callbackRootMenu()
-			var/menuAction/M = __parent
+			var/menu/M = __parent
 			while(1)
 				if(M.getParent()) M = M.getParent()
 				else break
@@ -173,7 +165,7 @@ menu
 			if(answer == inputOps.INPUT_NOT_READY)
 				return answer
 
-			for(var/menuAction/M in __children)
+			for(var/menu/M in __children)
 				if(M.match(answer))
 					return M
 
@@ -199,4 +191,3 @@ menu
 				return __inputFormatter.Run(src)
 			else
 				return defaultQuestionFormat()
-

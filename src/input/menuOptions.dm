@@ -12,27 +12,21 @@
 
 menuOptions
 	proc
-		menuAnswer(a, i)
-			// Note: If this if statement is moved below
-			// the below stuff assigning a value to A, then
-			// BYOND does a silent procedure crash.
-			if(istype(i, /menuAction))
-				return i
-
-			var/menuAction/A
-			if(!istype(a, /menuAction))
-				A = new/menuAction(a)
-			else
-				A = a
+		menuAnswer(menu/a, i)
+			if(!istype(a))
+				Log("Invalid menu passed to menuOps.menuAnswer: [a]", EVENT_GENERAL)
+				CRASH("Invalid menu passed to menuOps.menuAnswer: [a]")
 
 			if(i == menuOps.MENU_REPEAT)
-				return A
+				return a
 			else if(i == menuOps.MENU_BACK)
-				return A.getParent()
+				return a.getParent()
 			else if(i == menuOps.MENU_EXIT)
 				return
 			else if(i == inputOps.INPUT_BAD)
-				return A
+				return a
+			else if(istype(i, /menu))
+				return i
 			else
 				Log("Invalid menu answer [i]", EVENT_GENERAL)
 				CRASH("Invalid menu answer [i]")
@@ -42,10 +36,10 @@ menuOptions
 
 		getSubmenu(main, sub)
 			if(main in predefined)
-				var/menuAction/M = predefined[main]
-				return M.findMenuAction(sub)
+				var/menu/M = predefined[main]
+				return M.findMenu(sub)
 
-		addMenu(menuAction/M, key)
+		addMenu(menu/M, key)
 			predefined += key
 			predefined[key] = M
 
