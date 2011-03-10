@@ -21,7 +21,7 @@ Command/MUD/Chat
 				sendTxt("Getting lonely, are we?", user, DT_MISC, 0)
 				return 1
 
-			if(!T || T == " ")
+			if(inputOps.isEmpty(T))
 				sendTxt("Tell [target.getName()] what?", user, DT_MISC, 0)
 				return 1
 
@@ -42,7 +42,7 @@ Command/MUD/Chat
 		format = "~'say'; anything"
 		Process(mob/user, T)
 			..()
-			if(!T || T == " ")
+			if(inputOps.isEmpty(T))
 				sendTxt("Say what?", user, DT_MISC, 0)
 				return 1
 
